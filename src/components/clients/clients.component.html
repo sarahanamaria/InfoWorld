@@ -1,0 +1,39 @@
+<div class="flex flex-column mt-6">
+  <p-toast/>
+  <p-table [value]="users" paginator="true" [rows]="2">
+    <ng-template #caption>
+      <div class="flex justify-content-end">
+        <p-button label="Adauga clienti" icon="pi pi-user-plus" (onClick)="addClient()"></p-button>
+      </div>
+    </ng-template>
+    <ng-template #header>
+      <tr>
+        <th>Nume</th>
+        <th>Email</th>
+        <th>Telefon</th>
+        <th># masini</th>
+        <th>Editeaza</th>
+        <th>Dezactiveaza</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-user>
+      <tr
+        [pTooltip]="!user.isUserActive ? 'Acest client este dezactivat' : ''"
+        [classList]="
+          !user.isUserActive ? 'opacity-20 pointer-events-none' : 'opacity-100'
+        "
+      >
+        <td>{{`${user.firstName} ${user.lastName}`}}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.phoneNumbers.join(", ") }}</td>
+        <td>
+          <span pTooltip="Apasa pentru detalii" tooltipPosition="top">{{
+            user.cars.length
+          }}</span>
+        </td>
+        <td><i class="pi pi-user-edit cursor-pointer"></i></td>
+        <td><i class="pi pi-power-off cursor-pointer"></i></td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

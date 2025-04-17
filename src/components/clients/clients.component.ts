@@ -1,0 +1,172 @@
+import { Component } from '@angular/core';
+import { AddClientFormComponent } from '@components/add-client-form/add-client-form.component';
+import { IUser } from '@models/user.model';
+import { EngineTypeEnum } from 'enums/engine-type.enum';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import {
+  DialogService,
+  DynamicDialogModule,
+  DynamicDialogRef,
+} from 'primeng/dynamicdialog';
+import { TableModule } from 'primeng/table';
+import { Toast } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
+import { take } from 'rxjs';
+
+@Component({
+  selector: 'app-clients',
+  imports: [TableModule, TooltipModule, ButtonModule, DynamicDialogModule, Toast],
+  providers: [DialogService, MessageService],
+  templateUrl: './clients.component.html',
+  styleUrl: './clients.component.scss',
+})
+export class ClientsComponent {
+  users: IUser[] = [
+    {
+      id: 1,
+      firstName: 'Andrei',
+      lastName: 'Ionescu',
+      email: 'andrei.ionescu@mail.com',
+      phoneNumbers: ['0723123456'],
+      isUserActive: true,
+      cars: [
+        {
+          id: 101,
+          licensePlate: 'B-123-XYZ',
+          chassis: 'WVWZZZ1JZXW000001',
+          brand: 'Volkswagen',
+          model: 'Golf 7',
+          year: 2017,
+          engineType: EngineTypeEnum.Diesel,
+          engineCapacity: 1968,
+          horsepower: 150,
+          kilowatts: 110,
+        },
+      ],
+    },
+    {
+      id: 2,
+      firstName: 'Maria',
+      lastName: 'Popa',
+      email: 'maria.popa@gmail.com',
+      phoneNumbers: ['0733555666', '0744999888'],
+      isUserActive: true,
+      cars: [
+        {
+          id: 102,
+          licensePlate: 'CJ-98-POP',
+          chassis: 'WDB12345678900001',
+          brand: 'Mercedes-Benz',
+          model: 'A-Class',
+          year: 2021,
+          engineType: EngineTypeEnum.Gasoline,
+          engineCapacity: 1332,
+          horsepower: 163,
+          kilowatts: 120,
+        },
+        {
+          id: 103,
+          licensePlate: 'CJ-77-MRY',
+          chassis: 'WDB98765432100001',
+          brand: 'Renault',
+          model: 'Clio',
+          year: 2015,
+          engineType: EngineTypeEnum.Hybrid,
+          engineCapacity: 1600,
+          horsepower: 105,
+          kilowatts: 77,
+        },
+      ],
+    },
+    {
+      id: 3,
+      firstName: 'George',
+      lastName: 'Stan',
+      email: 'george.stan@example.com',
+      phoneNumbers: ['0760111222'],
+      isUserActive: true,
+      cars: [],
+    },
+    {
+      id: 4,
+      firstName: 'Ioana',
+      lastName: 'Mihai',
+      email: 'ioana.mihai@domain.com',
+      phoneNumbers: ['0722000111', '0733000222', '0744000333'],
+      isUserActive: false,
+      cars: [
+        {
+          id: 104,
+          licensePlate: 'TM-10-IOA',
+          chassis: '1HGCM82633A004352',
+          brand: 'Honda',
+          model: 'Civic',
+          year: 2009,
+          engineType: EngineTypeEnum.Gasoline,
+          engineCapacity: 1799,
+          horsepower: 140,
+          kilowatts: 103,
+        },
+      ],
+    },
+    {
+      id: 5,
+      firstName: 'Daniel',
+      lastName: 'Lupu',
+      email: 'dan.lupu@yahoo.com',
+      phoneNumbers: ['0755111222'],
+      isUserActive: true,
+      cars: [
+        {
+          id: 105,
+          licensePlate: 'IF-44-DNL',
+          chassis: 'WAUZZZ8K9AA000123',
+          brand: 'Audi',
+          model: 'A4',
+          year: 2012,
+          engineType: EngineTypeEnum.Diesel,
+          engineCapacity: 1968,
+          horsepower: 143,
+          kilowatts: 105,
+        },
+        {
+          id: 106,
+          licensePlate: 'IF-55-TES',
+          chassis: '5YJ3E1EA7HF000000',
+          brand: 'Tesla',
+          model: 'Model 3',
+          year: 2020,
+          engineType: EngineTypeEnum.Electric,
+          engineCapacity: 0,
+          horsepower: 283,
+          kilowatts: 208,
+        },
+      ],
+    },
+  ];
+  dialogRef: DynamicDialogRef | null = null;
+
+  constructor(private dialogSerivce: DialogService, private messageService: MessageService) {}
+
+  addClient(): void {
+    this.dialogRef = this.dialogSerivce.open(AddClientFormComponent, {
+      header: 'Adauga un client',
+      closable: true,
+      closeOnEscape: true,
+      modal: true, // background is restricted if opened
+      width: '500px',
+      height: '550px',
+    });
+
+    this.dialogRef.onClose.pipe(take(1)).subscribe(() => {
+      this.messageService.add({severity: 'info', summary: 'Inchis', detail: 'Dialogul a fost inchis'})
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.dialogRef) {
+      this.dialogRef.close();
+    }
+  }
+}
