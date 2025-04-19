@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AddClientFormComponent } from '@components/add-client-form/add-client-form.component';
-import { IUser } from '@models/user.model';
+import { IClient } from '@models/client.model';
 import { EngineTypeEnum } from 'enums/engine-type.enum';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -28,7 +28,7 @@ import { take } from 'rxjs';
   styleUrl: './clients.component.scss',
 })
 export class ClientsComponent {
-  users: IUser[] = [
+  users: IClient[] = [
     {
       id: 1,
       firstName: 'Andrei',

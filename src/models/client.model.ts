@@ -1,6 +1,6 @@
 import { ICar } from './car.model';
 
-export interface IUser {
+export interface IClient {
   id: number;
   firstName: string;
   lastName: string;
