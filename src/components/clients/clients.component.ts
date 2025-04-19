@@ -151,6 +151,8 @@ export class ClientsComponent {
     });
 
     this.dialogRef.onClose.pipe(take(1)).subscribe((clientData: IClient) => {
+      this.clients.push(clientData);
+
       this.messageService.add({
         severity: 'success',
         summary: 'Client adaugat',
