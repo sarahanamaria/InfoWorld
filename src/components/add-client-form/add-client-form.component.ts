@@ -8,6 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ICar } from '@models/car.model';
 import { EngineTypeEnum } from 'enums/engine-type.enum';
 import { Button } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -39,6 +40,7 @@ export class AddClientFormComponent {
   showClientForm: boolean = true;
 
   engineTypes: { name: string }[] = [];
+  totalCars: ICar[] = [];
 
   constructor(private fb: FormBuilder, private dialogRef: DynamicDialogRef) {}
 
@@ -65,9 +67,14 @@ export class AddClientFormComponent {
     }
   }
 
-  saveData(): void {
-    // this.dialogRef.close(this.clientForm.value)
-    console.log(this.carForm.value);
+  addCar(): void {
+    this.totalCars.push({...this.carForm.value, engineType: this.carForm.get('engineType')?.value.name});
+    this.carForm.reset();
+  }
+
+  saveClientData(): void {
+
+    console.log(this.totalCars)
   }
 
   private initForm(): void {
