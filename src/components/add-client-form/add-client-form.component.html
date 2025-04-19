@@ -1,1 +1,45 @@
-<p>add-client-form works!</p>
+@if (showClientForm) {
+  <form [formGroup]="clientForm" (ngSubmit)="submitClient()" class="mt-4 flex-column">
+    <div class="flex justify-content-between gap-2">
+      <p-floatLabel>
+        <input id="firstName" type="text" pInputText formControlName="firstName" />
+        <label for="firstName">Prenume</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="lastName" type="text" pInputText formControlName="lastName" />
+        <label for="lastName">Nume</label>
+      </p-floatLabel>
+    </div>
+
+    <p-floatLabel class="mt-5">
+      <input id="email" type="email" pInputText formControlName="email" class="w-full" />
+      <label for="email">Adresa email</label>
+    </p-floatLabel>
+
+    <div class="flex align-items-end gap-2 mt-5">
+      <p-floatLabel class="flex-1">
+        <input id="phone" type="tel" pInputText [formControl]="phoneNumberControl" class="w-full" />
+        <label for="phone">Numar telefon</label>
+      </p-floatLabel>
+      <p-button label="Adauga" (onClick)="addPhoneNumber()" />
+    </div>
+
+    @if (phoneNumbersArray.length) {
+      <div class="flex flex-wrap row-gap-3 column-gap-3 mt-2">
+      @for (number of phoneNumbersArray.controls; track $index) {
+        <p-tag class="pi pi-phone cursor-pointer" severity="info" [value]="number.value" (click)="removePhoneNumber($index)"></p-tag>
+      }
+    </div>
+    }
+
+    @if (phoneNumbersArray.controls.length) {
+      <div class="mt-2 flex justify-content-end">
+        <p-button type="submit" label="Adauga masina" icon="pi pi-car" [disabled]="!clientForm.valid" tooltipPosition="top" [pTooltip]="!clientForm.valid ? 'Unul sau mai multe campuri nu sunt completate corect!' : ''"/>
+      </div>
+    }
+  </form>
+} @else {
+  <p-button label="Salveaza date" icon="pi pi-save" (onClick)="saveData()"/>
+}
+
+
