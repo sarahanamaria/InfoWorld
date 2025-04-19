@@ -7,5 +7,5 @@ export interface IClient {
   email: string;
   phoneNumbers: string[];
   cars: ICar[];
-  isUserActive: boolean;
+  isClientActive: boolean;
 }

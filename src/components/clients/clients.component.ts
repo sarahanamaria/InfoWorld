@@ -35,7 +35,7 @@ export class ClientsComponent {
       lastName: 'Ionescu',
       email: 'andrei.ionescu@mail.com',
       phoneNumbers: ['0723123456'],
-      isUserActive: true,
+      isClientActive: true,
       cars: [
         {
           id: 101,
@@ -54,7 +54,7 @@ export class ClientsComponent {
       lastName: 'Popa',
       email: 'maria.popa@gmail.com',
       phoneNumbers: ['0733555666', '0744999888'],
-      isUserActive: true,
+      isClientActive: true,
       cars: [
         {
           id: 102,
@@ -82,7 +82,7 @@ export class ClientsComponent {
       lastName: 'Stan',
       email: 'george.stan@example.com',
       phoneNumbers: ['0760111222'],
-      isUserActive: true,
+      isClientActive: true,
       cars: [],
     },
     {
@@ -91,7 +91,7 @@ export class ClientsComponent {
       lastName: 'Mihai',
       email: 'ioana.mihai@domain.com',
       phoneNumbers: ['0722000111', '0733000222', '0744000333'],
-      isUserActive: false,
+      isClientActive: false,
       cars: [
         {
           id: 104,
@@ -110,7 +110,7 @@ export class ClientsComponent {
       lastName: 'Lupu',
       email: 'dan.lupu@yahoo.com',
       phoneNumbers: ['0755111222'],
-      isUserActive: true,
+      isClientActive: true,
       cars: [
         {
           id: 105,
