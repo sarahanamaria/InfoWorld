@@ -156,7 +156,7 @@ export class ClientsComponent {
       closeOnEscape: true,
       modal: true, // background is restricted if opened
       width: '500px',
-      height: '550px',
+      height: 'auto'
     });
 
     this.dialogRef.onClose.pipe(take(1)).subscribe(() => {
