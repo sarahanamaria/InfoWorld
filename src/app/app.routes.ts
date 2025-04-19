@@ -8,4 +8,5 @@ export const routes: Routes = [
   { path: 'clients', component: ClientsComponent },
   { path: 'appointments', component: AppointmentsComponent },
   { path: 'history', component: HistoryComponent },
+  { path: '**', redirectTo: 'clients'}
 ];
