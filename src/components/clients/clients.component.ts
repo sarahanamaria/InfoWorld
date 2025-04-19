@@ -150,11 +150,11 @@ export class ClientsComponent {
       height: 'auto',
     });
 
-    this.dialogRef.onClose.pipe(take(1)).subscribe(() => {
+    this.dialogRef.onClose.pipe(take(1)).subscribe((clientData: IClient) => {
       this.messageService.add({
-        severity: 'info',
-        summary: 'Inchis',
-        detail: 'Dialogul a fost inchis',
+        severity: 'success',
+        summary: 'Client adaugat',
+        detail: 'Datele despre client si masini au fost salvate!',
       });
     });
   }
