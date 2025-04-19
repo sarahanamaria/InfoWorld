@@ -91,7 +91,7 @@ export class AddClientFormComponent {
       email: this.clientForm.get('email')?.value,
       phoneNumbers: this.clientForm.get('phoneNumbers')?.value,
       cars: structuredClone(this.totalCars), // deep copy array
-      isUserActive: true, // make true as default
+      isClientActive: true, // make true as default
     };
 
     this.dialogRef.close(finalClientData);
