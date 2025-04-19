@@ -161,6 +161,14 @@ export class ClientsComponent {
     });
   }
 
+  changeStatus(client: IClient): void {
+    client.isClientActive = !client.isClientActive;
+  }
+
+  applyDisabledClasses(isActive: boolean): string {
+    return isActive ? 'opacity-100' : 'opacity-20 pointer-events-none';
+  }
+
   ngOnDestroy(): void {
     if (this.dialogRef) {
       this.dialogRef.close();
