@@ -74,6 +74,7 @@ export class AddClientFormComponent {
   addCar(): void {
     this.totalCars.push({
       ...this.carForm.value,
+      id: uuidv4(), // create an uuid for each new car pushed
       engineType: this.carForm.get('engineType')?.value.name,
     });
     this.carForm.reset();
