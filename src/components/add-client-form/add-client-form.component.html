@@ -1,5 +1,5 @@
-@if (!showClientForm) {
-  <form [formGroup]="clientForm" (ngSubmit)="submitClient()" class="mt-4 flex-column">
+@if (showClientForm) {
+  <form [formGroup]="clientForm" (ngSubmit)="showCarForm()" class="mt-4 flex-column">
     <div class="flex justify-content-between gap-2">
       <p-floatLabel>
         <input id="firstName" type="text" pInputText formControlName="firstName" />
@@ -39,6 +39,9 @@
     }
   </form>
 } @else {
+  @if (totalCars.length) {
+    <span>Total masini adaugate: {{totalCars.length}}</span>
+  }
   <form class="flex flex-wrap justify-content-between pt-4" [formGroup]="carForm">
     <div class="flex flex-column row-gap-4">
       <p-floatLabel>
