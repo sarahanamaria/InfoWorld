@@ -39,7 +39,36 @@
     }
   </form>
 } @else {
-  <p-button label="Salveaza date" icon="pi pi-save" (onClick)="saveData()"/>
+  <form class="flex flex-wrap justify-content-between pt-4" [formGroup]="carForm">
+    <div class="flex flex-column row-gap-4">
+      <p-floatLabel>
+        <input id="licensePlate" type="text" pInputText formControlName="licensePlate" />
+        <label for="licensePlate">Nr. Inmatriculare</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="chassis" type="text" pInputText formControlName="chassis" />
+        <label for="chassis">Serie Sasiu</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="brand" type="text" pInputText formControlName="brand" />
+        <label for="brand">Marca</label>
+      </p-floatLabel>
+    </div>
+    <div class="flex flex-column row-gap-4">
+      <p-floatLabel>
+        <input id="model" type="text" pInputText formControlName="model" />
+        <label for="model">Model</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input class="w-full" id="year" type="number" pInputText formControlName="year" min="1900" max="2025"/>
+        <label for="year">An fabricatie</label>
+      </p-floatLabel>
+      <p-select formControlName="engineType" appendTo="body" [options]="engineTypes" optionLabel="name" placeholder="Selecteaza o motorizare" class="w-full"/>
+    </div>
+  </form>
+  <div class="flex justify-content-end pt-2">
+    <p-button label="Salveaza date" icon="pi pi-save" (onClick)="saveData()"/>
+  </div>
 }
 
 
