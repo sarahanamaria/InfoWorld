@@ -28,7 +28,7 @@ import { take } from 'rxjs';
   styleUrl: './clients.component.scss',
 })
 export class ClientsComponent {
-  users: IClient[] = [
+  clients: IClient[] = [
     {
       id: 1,
       firstName: 'Andrei',
