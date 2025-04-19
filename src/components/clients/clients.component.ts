@@ -16,7 +16,13 @@ import { take } from 'rxjs';
 
 @Component({
   selector: 'app-clients',
-  imports: [TableModule, TooltipModule, ButtonModule, DynamicDialogModule, Toast],
+  imports: [
+    TableModule,
+    TooltipModule,
+    ButtonModule,
+    DynamicDialogModule,
+    Toast,
+  ],
   providers: [DialogService, MessageService],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss',
@@ -39,9 +45,6 @@ export class ClientsComponent {
           model: 'Golf 7',
           year: 2017,
           engineType: EngineTypeEnum.Diesel,
-          engineCapacity: 1968,
-          horsepower: 150,
-          kilowatts: 110,
         },
       ],
     },
@@ -61,9 +64,6 @@ export class ClientsComponent {
           model: 'A-Class',
           year: 2021,
           engineType: EngineTypeEnum.Gasoline,
-          engineCapacity: 1332,
-          horsepower: 163,
-          kilowatts: 120,
         },
         {
           id: 103,
@@ -73,9 +73,6 @@ export class ClientsComponent {
           model: 'Clio',
           year: 2015,
           engineType: EngineTypeEnum.Hybrid,
-          engineCapacity: 1600,
-          horsepower: 105,
-          kilowatts: 77,
         },
       ],
     },
@@ -104,9 +101,6 @@ export class ClientsComponent {
           model: 'Civic',
           year: 2009,
           engineType: EngineTypeEnum.Gasoline,
-          engineCapacity: 1799,
-          horsepower: 140,
-          kilowatts: 103,
         },
       ],
     },
@@ -126,9 +120,6 @@ export class ClientsComponent {
           model: 'A4',
           year: 2012,
           engineType: EngineTypeEnum.Diesel,
-          engineCapacity: 1968,
-          horsepower: 143,
-          kilowatts: 105,
         },
         {
           id: 106,
@@ -138,16 +129,16 @@ export class ClientsComponent {
           model: 'Model 3',
           year: 2020,
           engineType: EngineTypeEnum.Electric,
-          engineCapacity: 0,
-          horsepower: 283,
-          kilowatts: 208,
         },
       ],
     },
   ];
   dialogRef: DynamicDialogRef | null = null;
 
-  constructor(private dialogSerivce: DialogService, private messageService: MessageService) {}
+  constructor(
+    private dialogSerivce: DialogService,
+    private messageService: MessageService
+  ) {}
 
   addClient(): void {
     this.dialogRef = this.dialogSerivce.open(AddClientFormComponent, {
@@ -156,11 +147,15 @@ export class ClientsComponent {
       closeOnEscape: true,
       modal: true, // background is restricted if opened
       width: '500px',
-      height: 'auto'
+      height: 'auto',
     });
 
     this.dialogRef.onClose.pipe(take(1)).subscribe(() => {
-      this.messageService.add({severity: 'info', summary: 'Inchis', detail: 'Dialogul a fost inchis'})
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Inchis',
+        detail: 'Dialogul a fost inchis',
+      });
     });
   }
 

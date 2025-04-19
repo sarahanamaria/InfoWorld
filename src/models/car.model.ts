@@ -8,7 +8,4 @@ export interface ICar {
   model: string;
   year: number;
   engineType: EngineTypeEnum;
-  engineCapacity: number; //cm^3
-  horsepower: number;
-  kilowatts: number;
 }
