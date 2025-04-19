@@ -17,6 +17,7 @@ import { InputText } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { Tooltip } from 'primeng/tooltip';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-add-client-form',
@@ -61,22 +62,43 @@ export class AddClientFormComponent {
     this.phoneNumbersArray.removeAt(index);
   }
 
-  submitClient(): void {
+  showCarForm(): void {
     if (this.clientForm.valid) {
       this.showClientForm = false;
     }
   }
 
+  /**
+   * Adds a car to the total cars added through the form and then resets the form
+   */
   addCar(): void {
-    this.totalCars.push({...this.carForm.value, engineType: this.carForm.get('engineType')?.value.name});
+    this.totalCars.push({
+      ...this.carForm.value,
+      engineType: this.carForm.get('engineType')?.value.name,
+    });
     this.carForm.reset();
   }
 
+  /**
+   * Creates a constant to save the final data for the client and emits it to the calling parent
+   */
   saveClientData(): void {
+    const finalClientData = {
+      id: uuidv4(),
+      firstName: this.clientForm.get('firstName')?.value,
+      lastName: this.clientForm.get('lastName')?.value,
+      email: this.clientForm.get('email')?.value,
+      phoneNumbers: this.clientForm.get('phoneNumbers')?.value,
+      cars: structuredClone(this.totalCars), // deep copy array
+      isUserActive: true, // make true as default
+    };
 
-    console.log(this.totalCars)
+    this.dialogRef.close(finalClientData);
   }
 
+  /**
+   * Init both the client and the car form with empty values
+   */
   private initForm(): void {
     this.phoneNumbersArray = this.fb.array([]);
     this.phoneNumberControl = this.fb.control('', Validators.minLength(10));
@@ -99,6 +121,9 @@ export class AddClientFormComponent {
     });
   }
 
+  /**
+   * Define engine types for dropdown
+   */
   private setEngines(): void {
     this.engineTypes = [
       {
