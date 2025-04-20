@@ -179,10 +179,45 @@ export class ClientsComponent {
    */
   changeClientStatus(client: IClient): void {
     client.isClientActive = !client.isClientActive;
+
+    client.cars.forEach((car: ICar) => {
+      car.isCarActive = client.isClientActive;
+    });
+  }
+
+  /**
+   * Disables or enables a car and updates the client status accordingly
+   * @param car - car to be deleted
+   */
+  changeCarStatus(car: ICar): void {
+    car.isCarActive = !car.isCarActive;
+
+    const client: IClient | undefined = this.clients.find((client) =>
+      client.cars.some((c) => c.id === car.id)
+    );
+
+    if (client) {
+      client.isClientActive = client.cars.some((c) => c.isCarActive);
+    }
   }
 
   applyDisabledClasses(isActive: boolean): string {
     return isActive ? 'opacity-100' : 'opacity-20 pointer-events-none';
+  }
+
+  /**
+   * Toggles the expanded state of a client row in the table
+   * @param eventData - event data containing the client information
+   * @param isExpanded - whether the row is expanded or collapsed
+   */
+  onClientToggle(eventData: TableRowExpandEvent<IClient> | TableRowCollapseEvent, isExpanded: boolean): void {
+    const client = eventData.data;
+    this.messageService.add({
+      severity: 'info',
+      summary: `Client ${isExpanded ? 'extins' : 'restrans'}`,
+      detail: `${client.firstName} ${client.lastName}`,
+      life: 2000,
+    });
   }
 
   ngOnDestroy(): void {
