@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AddClientFormComponent } from '@components/add-client-form/add-client-form.component';
+import { ICar } from '@models/car.model';
 import { IClient } from '@models/client.model';
 import { EngineTypeEnum } from 'enums/engine-type.enum';
 import { MessageService } from 'primeng/api';
@@ -9,7 +10,7 @@ import {
   DynamicDialogModule,
   DynamicDialogRef,
 } from 'primeng/dynamicdialog';
-import { TableModule } from 'primeng/table';
+import { TableModule, TableRowCollapseEvent, TableRowExpandEvent } from 'primeng/table';
 import { Toast } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { take } from 'rxjs';
@@ -45,6 +46,7 @@ export class ClientsComponent {
           model: 'Golf 7',
           year: 2017,
           engineType: EngineTypeEnum.Diesel,
+          isCarActive: true,
         },
       ],
     },
@@ -64,6 +66,7 @@ export class ClientsComponent {
           model: 'A-Class',
           year: 2021,
           engineType: EngineTypeEnum.Gasoline,
+          isCarActive: true,
         },
         {
           id: 103,
@@ -73,6 +76,7 @@ export class ClientsComponent {
           model: 'Clio',
           year: 2015,
           engineType: EngineTypeEnum.Hybrid,
+          isCarActive: true,
         },
       ],
     },
@@ -101,6 +105,7 @@ export class ClientsComponent {
           model: 'Civic',
           year: 2009,
           engineType: EngineTypeEnum.Gasoline,
+          isCarActive: true,
         },
       ],
     },
@@ -120,6 +125,7 @@ export class ClientsComponent {
           model: 'A4',
           year: 2012,
           engineType: EngineTypeEnum.Diesel,
+          isCarActive: true,
         },
         {
           id: 106,
@@ -129,17 +135,23 @@ export class ClientsComponent {
           model: 'Model 3',
           year: 2020,
           engineType: EngineTypeEnum.Electric,
+          isCarActive: true,
         },
       ],
     },
   ];
   dialogRef: DynamicDialogRef | null = null;
 
+  expandedClientRows: { [key: number]: boolean } = {}; // table automatically sets which rows are expanded or not
+
   constructor(
     private dialogSerivce: DialogService,
     private messageService: MessageService
   ) {}
 
+  /**
+   * Adds a new client by opening a dialog with the form
+   */
   addClient(): void {
     this.dialogRef = this.dialogSerivce.open(AddClientFormComponent, {
       header: 'Adauga un client',
@@ -161,7 +173,11 @@ export class ClientsComponent {
     });
   }
 
-  changeStatus(client: IClient): void {
+  /**
+   * Disables or enables a client and all of its cars
+   * @param client - client to be deleted
+   */
+  changeClientStatus(client: IClient): void {
     client.isClientActive = !client.isClientActive;
   }
 
