@@ -75,6 +75,7 @@ export class AddClientFormComponent {
     this.totalCars.push({
       ...this.carForm.value,
       id: uuidv4(), // create an uuid for each new car pushed
+      isCarActive: true, // make true as default
       engineType: this.carForm.get('engineType')?.value.name,
     });
     this.carForm.reset();
