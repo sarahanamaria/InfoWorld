@@ -8,4 +8,5 @@ export interface ICar {
   model: string;
   year: number;
   engineType: EngineTypeEnum;
+  isCarActive: boolean;
 }
