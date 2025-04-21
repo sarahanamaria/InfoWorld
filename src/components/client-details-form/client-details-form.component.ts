@@ -43,7 +43,7 @@ export class AddClientFormComponent {
   engineTypes: { name: string }[] = [];
   totalCars: ICar[] = [];
 
-  isClientEdited: boolean = false;
+  formMode: 'clientAdd' | 'clientEdit' | 'carAdd' | 'carEdit' | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -55,7 +55,10 @@ export class AddClientFormComponent {
     this.initForm();
     this.setEngines();
 
+    this.setFormMode();
+
     this.fillClientDetails();
+    this.fillCarDetails();
   }
 
   addPhoneNumber(): void {
@@ -71,11 +74,9 @@ export class AddClientFormComponent {
   }
 
   submit(): void {
-    if (!this.isClientEdited && this.clientForm.valid) {
-      this.showClientForm = false;
-    }
-
-    if (this.isClientEdited && this.clientForm.valid) {
+    if (this.formMode === 'clientAdd' && this.clientForm.valid) {
+      this.formMode = 'carAdd';
+    } else if (this.formMode === 'clientEdit' && this.clientForm.valid) {
       this.dialogRef.close({
         ...this.clientForm.value,
         id: this.dialogConfig.data.clientData.id,
@@ -84,6 +85,13 @@ export class AddClientFormComponent {
           isCarActive: car.isCarActive,
         })),
         isClientActive: this.dialogConfig.data.clientData.isClientActive,
+      });
+    } else if (this.formMode === 'carEdit' && this.carForm.valid) {
+      this.dialogRef.close({
+        ...this.carForm.value,
+        id: this.dialogConfig.data.carData.id,
+        engineType: this.carForm.get('engineType')?.value.name,
+        isCarActive: this.dialogConfig.data.carData.isCarActive,
       });
     }
   }
@@ -104,7 +112,17 @@ export class AddClientFormComponent {
   /**
    * Creates a constant to save the final data for the client and emits it to the calling parent
    */
-  saveClientData(): void {
+  saveData(): void {
+    if (this.formMode === 'carEdit') {
+      this.dialogRef.close({
+        ...this.carForm.value,
+        id: this.dialogConfig.data.carData.id,
+        engineType: this.carForm.get('engineType')?.value.name,
+        isCarActive: this.dialogConfig.data.carData.isCarActive,
+      });
+      return;
+    }
+
     const finalClientData = {
       id: uuidv4(),
       firstName: this.clientForm.get('firstName')?.value,
@@ -117,6 +135,7 @@ export class AddClientFormComponent {
 
     this.dialogRef.close(finalClientData);
   }
+
 
   /**
    * Init both the client and the car form with empty values
@@ -167,8 +186,7 @@ export class AddClientFormComponent {
    * Fill the form with data if the user wants to edit an existing client
    */
   private fillClientDetails(): void {
-    this.isClientEdited = this.dialogConfig.data?.isClientEdited;
-    if (this.dialogConfig.data) {
+    if (this.dialogConfig.data.clientData) {
       this.clientForm.patchValue({
         firstName: this.dialogConfig.data.clientData.firstName,
         lastName: this.dialogConfig.data.clientData.lastName,
@@ -181,6 +199,31 @@ export class AddClientFormComponent {
           this.phoneNumbersArray.push(new FormControl(phoneNumber));
         }
       );
+    }
+  }
+
+  private fillCarDetails(): void {
+    if (this.dialogConfig.data.carData) {
+      this.carForm.patchValue({
+        licensePlate: this.dialogConfig.data.carData.licensePlate,
+        chassis: this.dialogConfig.data.carData.chassis,
+        brand: this.dialogConfig.data.carData.brand,
+        model: this.dialogConfig.data.carData.model,
+        year: this.dialogConfig.data.carData.year,
+        engineType: { name: this.dialogConfig.data.carData.engineType },
+      });
+    }
+  }
+
+  private setFormMode(): void {
+    if (this.dialogConfig.data?.isClientEdited) {
+      this.formMode = 'clientEdit';
+      this.fillClientDetails();
+    } else if (this.dialogConfig.data?.isCarEdited) {
+      this.formMode = 'carEdit';
+      this.fillCarDetails();
+    } else {
+      this.formMode = 'clientAdd';
     }
   }
 }
