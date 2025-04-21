@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AddClientFormComponent } from '@components/add-client-form/add-client-form.component';
+import { AddClientFormComponent } from '@components/client-details-form/client-details.-form.component';
 import { ICar } from '@models/car.model';
 import { IClient } from '@models/client.model';
 import { EngineTypeEnum } from 'enums/engine-type.enum';

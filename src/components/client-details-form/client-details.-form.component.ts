@@ -30,8 +30,8 @@ import { v4 as uuidv4 } from 'uuid';
     Tooltip,
     SelectModule,
   ],
-  templateUrl: './add-client-form.component.html',
-  styleUrl: './add-client-form.component.scss',
+  templateUrl: './client-details-form.component.html',
+  styleUrl: './client-details-form.component.scss',
 })
 export class AddClientFormComponent {
   clientForm!: FormGroup;
