@@ -43,7 +43,7 @@ export class AddClientFormComponent {
   engineTypes: { name: string }[] = [];
   totalCars: ICar[] = [];
 
-  isDataEdited: boolean = false;
+  isClientEdited: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -70,9 +70,21 @@ export class AddClientFormComponent {
     this.phoneNumbersArray.removeAt(index);
   }
 
-  showCarForm(): void {
-    if (this.clientForm.valid) {
+  submit(): void {
+    if (!this.isClientEdited && this.clientForm.valid) {
       this.showClientForm = false;
+    }
+
+    if (this.isClientEdited && this.clientForm.valid) {
+      this.dialogRef.close({
+        ...this.clientForm.value,
+        id: this.dialogConfig.data.clientData.id,
+        cars: this.dialogConfig.data.clientData.cars.map((car: ICar) => ({
+          ...car,
+          isCarActive: car.isCarActive,
+        })),
+        isClientActive: this.dialogConfig.data.clientData.isClientActive,
+      });
     }
   }
 
@@ -155,9 +167,8 @@ export class AddClientFormComponent {
    * Fill the form with data if the user wants to edit an existing client
    */
   private fillClientDetails(): void {
-    this.isDataEdited = this.dialogConfig.data?.isDataEdited;
+    this.isClientEdited = this.dialogConfig.data?.isClientEdited;
     if (this.dialogConfig.data) {
-      this.dialogConfig.data.isDataEdited = true;
       this.clientForm.patchValue({
         firstName: this.dialogConfig.data.clientData.firstName,
         lastName: this.dialogConfig.data.clientData.lastName,
