@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AddClientFormComponent } from '@components/client-details-form/client-details.-form.component';
+import { AddClientFormComponent } from '@components/client-details-form/client-details-form.component';
 import { ICar } from '@models/car.model';
 import { IClient } from '@models/client.model';
 import { EngineTypeEnum } from 'enums/engine-type.enum';
@@ -218,6 +218,22 @@ export class ClientsComponent {
       detail: `${client.firstName} ${client.lastName}`,
       life: 2000,
     });
+  }
+
+  editClient(client: IClient): void {
+    this.dialogRef = this.dialogSerivce.open(AddClientFormComponent, {
+      header: `Editeaza clientul ${client.firstName} ${client.lastName}`,
+      closable: true,
+      closeOnEscape: true,
+      modal: true, // background is restricted if opened
+      width: '500px',
+      height: 'auto',
+      data: {
+        clientData: client,
+        isDataEdited: true,
+      }
+    });
+
   }
 
   ngOnDestroy(): void {
