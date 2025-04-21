@@ -162,7 +162,8 @@ export class ClientsComponent {
       height: 'auto',
     });
 
-    this.dialogRef.onClose.pipe(take(1)).subscribe((clientData: IClient) => {
+    this.dialogRef.onClose.pipe(take(1)).subscribe((clientData: IClient | undefined) => {
+      if (clientData) {
       this.clients.push(clientData);
 
       this.messageService.add({
@@ -170,6 +171,7 @@ export class ClientsComponent {
         summary: 'Client adaugat',
         detail: 'Datele despre client si masini au fost salvate!',
       });
+      }
     });
   }
 
