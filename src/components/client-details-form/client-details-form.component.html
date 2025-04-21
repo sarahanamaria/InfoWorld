@@ -1,4 +1,4 @@
-@if (showClientForm) {
+@if (formMode === 'clientAdd' || formMode === 'clientEdit') {
   <form [formGroup]="clientForm" (ngSubmit)="submit()" class="mt-4 flex-column">
     <div class="flex justify-content-between gap-2">
       <p-floatLabel>
@@ -34,11 +34,11 @@
 
     @if (phoneNumbersArray.controls.length) {
       <div class="mt-2 flex justify-content-end">
-        <p-button type="submit" [label]="isClientEdited ? 'Salveaza' : 'Adauga masina'" [icon]="`pi ${isClientEdited ? 'pi-save' : 'pi-car'}`" [disabled]="!clientForm.valid" tooltipPosition="top" [pTooltip]="!clientForm.valid ? 'Unul sau mai multe campuri nu sunt completate corect!' : ''"/>
+        <p-button type="submit" [label]="formMode === 'clientEdit' ? 'Salveaza' : 'Adauga masina'" [icon]="`pi ${formMode === 'clientEdit' ? 'pi-save' : 'pi-car'}`" [disabled]="!clientForm.valid" tooltipPosition="top" [pTooltip]="!clientForm.valid ? 'Unul sau mai multe campuri nu sunt completate corect!' : ''"/>
       </div>
     }
   </form>
-} @else if (!isClientEdited && !showClientForm) {
+} @else if (formMode === 'carEdit' || formMode === 'carAdd') {
   @if (totalCars.length) {
     <span>Total masini adaugate: {{totalCars.length}}</span>
   }
@@ -70,8 +70,10 @@
     <p-select class="w-full mt-4" formControlName="engineType" appendTo="body" [options]="engineTypes" optionLabel="name" placeholder="Selecteaza o motorizare"/>
   </form>
   <div class="flex justify-content-end pt-4">
-    <p-button tooltipPosition="top" [pTooltip]="carForm.valid ? '' : 'Completeaza formularul pentru a adauga'" label="Adauga masina" icon="pi pi-plus" class="mr-2" (onClick)="addCar()" [disabled]="!carForm.valid"></p-button>
-    <p-button tooltipPosition="top" [pTooltip]="totalCars.length ? '' : 'Trebuie sa adaugi cel putin o masina pentru a continua'" label="Salveaza date" icon="pi pi-save" (onClick)="saveClientData()" [disabled]="!totalCars.length"/>
+    @if (formMode === 'carAdd') {
+      <p-button tooltipPosition="top" [pTooltip]="carForm.valid ? '' : 'Completeaza formularul pentru a adauga'" label="Adauga masina" icon="pi pi-plus" class="mr-2" (onClick)="addCar()" [disabled]="!carForm.valid"></p-button>
+    }
+    <p-button tooltipPosition="top" [pTooltip]="totalCars.length ? '' : 'Trebuie sa adaugi cel putin o masina pentru a continua'" label="Salveaza date" icon="pi pi-save" (onClick)="saveData()" [disabled]="!totalCars.length && formMode === 'carAdd'"/>
   </div>
 }
 
