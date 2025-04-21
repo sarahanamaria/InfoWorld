@@ -1,5 +1,5 @@
 @if (showClientForm) {
-  <form [formGroup]="clientForm" (ngSubmit)="showCarForm()" class="mt-4 flex-column">
+  <form [formGroup]="clientForm" (ngSubmit)="submit()" class="mt-4 flex-column">
     <div class="flex justify-content-between gap-2">
       <p-floatLabel>
         <input id="firstName" type="text" pInputText formControlName="firstName" />
@@ -34,11 +34,11 @@
 
     @if (phoneNumbersArray.controls.length) {
       <div class="mt-2 flex justify-content-end">
-        <p-button type="submit" [label]="isDataEdited ? 'Salveaza' : 'Adauga masina'" icon="pi pi-car" [disabled]="!clientForm.valid" tooltipPosition="top" [pTooltip]="!clientForm.valid ? 'Unul sau mai multe campuri nu sunt completate corect!' : ''"/>
+        <p-button type="submit" [label]="isClientEdited ? 'Salveaza' : 'Adauga masina'" [icon]="`pi ${isClientEdited ? 'pi-save' : 'pi-car'}`" [disabled]="!clientForm.valid" tooltipPosition="top" [pTooltip]="!clientForm.valid ? 'Unul sau mai multe campuri nu sunt completate corect!' : ''"/>
       </div>
     }
   </form>
-} @else {
+} @else if (!isClientEdited && !showClientForm) {
   @if (totalCars.length) {
     <span>Total masini adaugate: {{totalCars.length}}</span>
   }
