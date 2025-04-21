@@ -164,13 +164,13 @@ export class ClientsComponent {
 
     this.dialogRef.onClose.pipe(take(1)).subscribe((clientData: IClient | undefined) => {
       if (clientData) {
-      this.clients.push(clientData);
+        this.clients.push(clientData);
 
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Client adaugat',
-        detail: 'Datele despre client si masini au fost salvate!',
-      });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Client adaugat',
+          detail: 'Datele despre client si masini au fost salvate!',
+        });
       }
     });
   }
@@ -232,7 +232,22 @@ export class ClientsComponent {
       height: 'auto',
       data: {
         clientData: client,
-        isDataEdited: true,
+        isClientEdited: true,
+      }
+    });
+
+    this.dialogRef.onClose.pipe(take(1)).subscribe((clientData: IClient | undefined) => {
+      if (clientData) {
+        const index = this.clients.findIndex((c) => {
+          return c.id === clientData.id});
+        if (index !== -1) {
+          this.clients[index] = clientData;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Client editat',
+            detail: 'Datele despre client au fost actualizate!',
+          });
+        }
       }
     });
 
