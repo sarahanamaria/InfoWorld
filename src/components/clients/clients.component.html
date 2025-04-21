@@ -28,6 +28,7 @@
         <th>Telefon</th>
         <th># masini</th>
         <th>Editeaza</th>
+        <th>Sterge</th>
         <th>Modifica stare</th>
       </tr>
     </ng-template>
@@ -65,6 +66,13 @@
         </td>
         <td><i class="pi pi-pencil cursor-pointer" (click)="editClient(client)"></i></td>
         <td>
+          <i
+            class="pi pi-trash cursor-pointer"
+            tooltipPosition="top"
+            [pTooltip]="'Sterge client'"
+            (click)="deleteClient(client)"
+          ></i>
+        <td>
           <i class="pi pi-power-off cursor-pointer"
             (click)="changeClientStatus(client)"
             tooltipPosition="top"
@@ -74,15 +82,15 @@
       </tr>
     </ng-template>
 
-    <ng-template #expandedrow let-user>
+    <ng-template #expandedrow let-client>
       <tr>
         <td colspan="7">
           <div>
             <h5>
-              Masinile clientului {{ user.firstName }} {{ user.lastName }}
+              Masinile clientului {{ client.firstName }} {{ client.lastName }}
             </h5>
 
-            <p-table [value]="user.cars" dataKey="id">
+            <p-table [value]="client.cars" dataKey="id">
               <ng-template #header>
                 <tr>
                   <th>Nr. inmatriculare</th>
@@ -92,6 +100,7 @@
                   <th>An fabricatie</th>
                   <th>Motorizare</th>
                   <th>Editeaza</th>
+                  <th>Sterge</th>
                   <th>Modifica stare</th>
                 </tr>
               </ng-template>
@@ -129,7 +138,15 @@
                   </td>
                   <td>
                     <i
-                      class="pi pi-pencil cursor-pointer"></i>
+                      class="pi pi-pencil cursor-pointer" (click)="editCar(car, client)"></i>
+                  </td>
+                  <td>
+                    <i
+                      class="pi pi-trash cursor-pointer"
+                      tooltipPosition="top"
+                      [pTooltip]="'Sterge masina'"
+                      (click)="deleteCar(car, client)"
+                    ></i>
                   </td>
                   <td>
                     <i

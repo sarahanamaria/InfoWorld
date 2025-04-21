@@ -222,6 +222,10 @@ export class ClientsComponent {
     });
   }
 
+  /**
+   * Opens a dialog to edit the client details
+   * @param client
+   */
   editClient(client: IClient): void {
     this.dialogRef = this.dialogSerivce.open(AddClientFormComponent, {
       header: `Editeaza clientul ${client.firstName} ${client.lastName}`,
@@ -250,7 +254,74 @@ export class ClientsComponent {
         }
       }
     });
+  }
 
+  /**
+   * Opens a dialog to edit the car details
+   * @param car
+   * @param client
+   */
+  editCar(car: ICar, client: IClient): void {
+    this.dialogRef = this.dialogSerivce.open(AddClientFormComponent, {
+      header: `Editeaza masina ${car.brand} ${car.model}`,
+      closable: true,
+      closeOnEscape: true,
+      modal: true, // background is restricted if opened
+      width: '500px',
+      height: 'auto',
+      data: {
+        carData: car,
+        clientData: client,
+        isCarEdited: true,
+      }
+    });
+
+    this.dialogRef.onClose.pipe(take(1)).subscribe((carData: ICar | undefined) => {
+      if (carData) {
+        const index = client.cars.findIndex((c) => c.id === carData.id);
+        if (index !== -1) {
+          client.cars[index] = carData;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Masina editata',
+            detail: 'Datele despre masina au fost actualizate!',
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * Deletes a client from the list and shows a message
+   * @param client
+   */
+  deleteClient(client: IClient): void {
+    const index = this.clients.findIndex((c) => c.id === client.id);
+    if (index !== -1) {
+      this.clients.splice(index, 1);
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Client sters',
+        detail: 'Clientul a fost sters!',
+      });
+    }
+  }
+
+  /**
+   * Deletes a car from the list and shows a message
+   * @param car - car to be deleted
+   * @param client - client to be updated
+   */
+  deleteCar(car: ICar, client: IClient): void {
+    const index = client.cars.findIndex((c) => c.id === car.id);
+    if (index !== -1) {
+      client.cars.splice(index, 1);
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Masina stearsa',
+        detail: 'Masina a fost stearsa!',
+      });
+    }
   }
 
   ngOnDestroy(): void {
