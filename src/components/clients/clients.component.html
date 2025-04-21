@@ -32,43 +32,43 @@
       </tr>
     </ng-template>
 
-    <ng-template #body let-user let-expanded="expanded">
+    <ng-template #body let-client let-expanded="expanded">
       <tr>
         <td>
           <!-- Create the toggling button for expanding a row -->
           <p-button
             pRipple
-            [pRowToggler]="user"
+            [pRowToggler]="client"
             [text]="true"
             [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
           />
         </td>
         <td>
-          <span [classList]="applyDisabledClasses(user.isClientActive)">
-            {{`${user.firstName} ${user.lastName}`}}
+          <span [classList]="applyDisabledClasses(client.isClientActive)">
+            {{`${client.firstName} ${client.lastName}`}}
           </span>
         </td>
         <td>
-          <span [classList]="applyDisabledClasses(user.isClientActive)">
-            {{ user.email }}
+          <span [classList]="applyDisabledClasses(client.isClientActive)">
+            {{ client.email }}
           </span>
         </td>
         <td>
-          <span [classList]="applyDisabledClasses(user.isClientActive)">
-            {{ user.phoneNumbers.join(", ") }}
+          <span [classList]="applyDisabledClasses(client.isClientActive)">
+            {{ client.phoneNumbers.join(", ") }}
           </span>
         </td>
         <td>
-          <span [classList]="applyDisabledClasses(user.isClientActive)">
-            {{ user.cars.length }}
+          <span [classList]="applyDisabledClasses(client.isClientActive)">
+            {{ client.cars.length }}
           </span>
         </td>
-        <td><i class="pi pi-pencil cursor-pointer"></i></td>
+        <td><i class="pi pi-pencil cursor-pointer" (click)="editClient(client)"></i></td>
         <td>
           <i class="pi pi-power-off cursor-pointer"
-            (click)="changeClientStatus(user)"
+            (click)="changeClientStatus(client)"
             tooltipPosition="top"
-            [pTooltip]="user.isClientActive ? 'Dezactiveaza client' : 'Activeaza client'">
+            [pTooltip]="client.isClientActive ? 'Dezactiveaza client' : 'Activeaza client'">
           </i>
         </td>
       </tr>
