@@ -34,7 +34,7 @@
 
     @if (phoneNumbersArray.controls.length) {
       <div class="mt-2 flex justify-content-end">
-        <p-button type="submit" label="Adauga masina" icon="pi pi-car" [disabled]="!clientForm.valid" tooltipPosition="top" [pTooltip]="!clientForm.valid ? 'Unul sau mai multe campuri nu sunt completate corect!' : ''"/>
+        <p-button type="submit" [label]="isDataEdited ? 'Salveaza' : 'Adauga masina'" icon="pi pi-car" [disabled]="!clientForm.valid" tooltipPosition="top" [pTooltip]="!clientForm.valid ? 'Unul sau mai multe campuri nu sunt completate corect!' : ''"/>
       </div>
     }
   </form>
