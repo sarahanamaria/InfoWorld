@@ -57,8 +57,11 @@ export class AddClientFormComponent {
 
     this.setFormMode();
 
-    this.fillClientDetails();
-    this.fillCarDetails();
+    if (this.formMode === 'carEdit') {
+      this.fillCarDetails();
+    } else if (this.formMode === 'clientEdit') {
+      this.fillClientDetails();
+    }
   }
 
   addPhoneNumber(): void {
