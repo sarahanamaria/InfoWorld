@@ -43,6 +43,7 @@ export class AppointmentFormComponent implements OnInit {
 
   startTimeSlots: string[] = [];
   endTimeSlots: string[] = [];
+  minDate: Date = new Date();
 
   constructor(
     private fb: FormBuilder,
