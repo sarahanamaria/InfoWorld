@@ -66,6 +66,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
       .subscribe((clientData: IClient | undefined) => {
         if (clientData) {
           this.clients.push(clientData);
+          this.clientsService.updateClients(this.clients);
 
           this.messageService.add({
             severity: 'success',
@@ -86,6 +87,8 @@ export class ClientsComponent implements OnInit, OnDestroy {
     client.cars.forEach((car: ICar) => {
       car.isCarActive = client.isClientActive;
     });
+
+    this.clientsService.updateClients(this.clients);
   }
 
   /**
@@ -102,6 +105,8 @@ export class ClientsComponent implements OnInit, OnDestroy {
     if (client) {
       client.isClientActive = client.cars.some((c) => c.isCarActive);
     }
+
+    this.clientsService.updateClients(this.clients);
   }
 
   applyDisabledClasses(isActive: boolean): string {
@@ -153,6 +158,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
           });
           if (index !== -1) {
             this.clients[index] = clientData;
+            this.clientsService.updateClients(this.clients);
             this.messageService.add({
               severity: 'success',
               summary: 'Client editat',
@@ -190,6 +196,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
           const index = client.cars.findIndex((c) => c.id === carData.id);
           if (index !== -1) {
             client.cars[index] = carData;
+            this.clientsService.updateClients(this.clients);
             this.messageService.add({
               severity: 'success',
               summary: 'Masina editata',
@@ -208,6 +215,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
     const index = this.clients.findIndex((c) => c.id === client.id);
     if (index !== -1) {
       this.clients.splice(index, 1);
+      this.clientsService.updateClients(this.clients);
       this.messageService.add({
         severity: 'warn',
         summary: 'Client sters',
@@ -225,6 +233,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
     const index = client.cars.findIndex((c) => c.id === car.id);
     if (index !== -1) {
       client.cars.splice(index, 1);
+      this.clientsService.updateClients(this.clients);
       this.messageService.add({
         severity: 'warn',
         summary: 'Masina stearsa',
