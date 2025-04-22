@@ -81,15 +81,6 @@ export class ClientsComponent {
       ],
     },
     {
-      id: 3,
-      firstName: 'George',
-      lastName: 'Stan',
-      email: 'george.stan@example.com',
-      phoneNumbers: ['0760111222'],
-      isClientActive: true,
-      cars: [],
-    },
-    {
       id: 4,
       firstName: 'Ioana',
       lastName: 'Mihai',
