@@ -11,4 +11,5 @@ export default interface IAppointment {
   startTime: string;
   endTime: string;
   status: 'programata' | 'finalizata' | 'anulata';
+  contactValue?: string; // optional, for pgone or email methods
 }
