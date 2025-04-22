@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AddClientFormComponent } from '@components/client-details-form/client-details-form.component';
 import { ICar } from '@models/car.model';
 import { IClient } from '@models/client.model';
-import { EngineTypeEnum } from 'enums/engine-type.enum';
+import { ClientsService } from '@services/clients.service';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import {
@@ -10,7 +10,11 @@ import {
   DynamicDialogModule,
   DynamicDialogRef,
 } from 'primeng/dynamicdialog';
-import { TableModule, TableRowCollapseEvent, TableRowExpandEvent } from 'primeng/table';
+import {
+  TableModule,
+  TableRowCollapseEvent,
+  TableRowExpandEvent,
+} from 'primeng/table';
 import { Toast } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { take } from 'rxjs';
@@ -28,117 +32,21 @@ import { take } from 'rxjs';
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss',
 })
-export class ClientsComponent {
-  clients: IClient[] = [
-    {
-      id: 1,
-      firstName: 'Andrei',
-      lastName: 'Ionescu',
-      email: 'andrei.ionescu@mail.com',
-      phoneNumbers: ['0723123456'],
-      isClientActive: true,
-      cars: [
-        {
-          id: 101,
-          licensePlate: 'B-123-XYZ',
-          chassis: 'WVWZZZ1JZXW000001',
-          brand: 'Volkswagen',
-          model: 'Golf 7',
-          year: 2017,
-          engineType: EngineTypeEnum.Diesel,
-          isCarActive: true,
-        },
-      ],
-    },
-    {
-      id: 2,
-      firstName: 'Maria',
-      lastName: 'Popa',
-      email: 'maria.popa@gmail.com',
-      phoneNumbers: ['0733555666', '0744999888'],
-      isClientActive: true,
-      cars: [
-        {
-          id: 102,
-          licensePlate: 'CJ-98-POP',
-          chassis: 'WDB12345678900001',
-          brand: 'Mercedes-Benz',
-          model: 'A-Class',
-          year: 2021,
-          engineType: EngineTypeEnum.Gasoline,
-          isCarActive: true,
-        },
-        {
-          id: 103,
-          licensePlate: 'CJ-77-MRY',
-          chassis: 'WDB98765432100001',
-          brand: 'Renault',
-          model: 'Clio',
-          year: 2015,
-          engineType: EngineTypeEnum.Hybrid,
-          isCarActive: true,
-        },
-      ],
-    },
-    {
-      id: 4,
-      firstName: 'Ioana',
-      lastName: 'Mihai',
-      email: 'ioana.mihai@domain.com',
-      phoneNumbers: ['0722000111', '0733000222', '0744000333'],
-      isClientActive: false,
-      cars: [
-        {
-          id: 104,
-          licensePlate: 'TM-10-IOA',
-          chassis: '1HGCM82633A004352',
-          brand: 'Honda',
-          model: 'Civic',
-          year: 2009,
-          engineType: EngineTypeEnum.Gasoline,
-          isCarActive: true,
-        },
-      ],
-    },
-    {
-      id: 5,
-      firstName: 'Daniel',
-      lastName: 'Lupu',
-      email: 'dan.lupu@yahoo.com',
-      phoneNumbers: ['0755111222'],
-      isClientActive: true,
-      cars: [
-        {
-          id: 105,
-          licensePlate: 'IF-44-DNL',
-          chassis: 'WAUZZZ8K9AA000123',
-          brand: 'Audi',
-          model: 'A4',
-          year: 2012,
-          engineType: EngineTypeEnum.Diesel,
-          isCarActive: true,
-        },
-        {
-          id: 106,
-          licensePlate: 'IF-55-TES',
-          chassis: '5YJ3E1EA7HF000000',
-          brand: 'Tesla',
-          model: 'Model 3',
-          year: 2020,
-          engineType: EngineTypeEnum.Electric,
-          isCarActive: true,
-        },
-      ],
-    },
-  ];
+export class ClientsComponent implements OnInit, OnDestroy {
+  clients: IClient[] = [];
   dialogRef: DynamicDialogRef | null = null;
 
   expandedClientRows: { [key: number]: boolean } = {}; // table automatically sets which rows are expanded or not
 
   constructor(
     private dialogSerivce: DialogService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private clientsService: ClientsService
   ) {}
+
+  ngOnInit(): void {
+    this.getClients();
+  }
 
   /**
    * Adds a new client by opening a dialog with the form
@@ -153,17 +61,19 @@ export class ClientsComponent {
       height: 'auto',
     });
 
-    this.dialogRef.onClose.pipe(take(1)).subscribe((clientData: IClient | undefined) => {
-      if (clientData) {
-        this.clients.push(clientData);
+    this.dialogRef.onClose
+      .pipe(take(1))
+      .subscribe((clientData: IClient | undefined) => {
+        if (clientData) {
+          this.clients.push(clientData);
 
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Client adaugat',
-          detail: 'Datele despre client si masini au fost salvate!',
-        });
-      }
-    });
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Client adaugat',
+            detail: 'Datele despre client si masini au fost salvate!',
+          });
+        }
+      });
   }
 
   /**
@@ -203,7 +113,10 @@ export class ClientsComponent {
    * @param eventData - event data containing the client information
    * @param isExpanded - whether the row is expanded or collapsed
    */
-  onClientToggle(eventData: TableRowExpandEvent<IClient> | TableRowCollapseEvent, isExpanded: boolean): void {
+  onClientToggle(
+    eventData: TableRowExpandEvent<IClient> | TableRowCollapseEvent,
+    isExpanded: boolean
+  ): void {
     const client = eventData.data;
     this.messageService.add({
       severity: 'info',
@@ -228,23 +141,26 @@ export class ClientsComponent {
       data: {
         clientData: client,
         isClientEdited: true,
-      }
+      },
     });
 
-    this.dialogRef.onClose.pipe(take(1)).subscribe((clientData: IClient | undefined) => {
-      if (clientData) {
-        const index = this.clients.findIndex((c) => {
-          return c.id === clientData.id});
-        if (index !== -1) {
-          this.clients[index] = clientData;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Client editat',
-            detail: 'Datele despre client au fost actualizate!',
+    this.dialogRef.onClose
+      .pipe(take(1))
+      .subscribe((clientData: IClient | undefined) => {
+        if (clientData) {
+          const index = this.clients.findIndex((c) => {
+            return c.id === clientData.id;
           });
+          if (index !== -1) {
+            this.clients[index] = clientData;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Client editat',
+              detail: 'Datele despre client au fost actualizate!',
+            });
+          }
         }
-      }
-    });
+      });
   }
 
   /**
@@ -264,22 +180,24 @@ export class ClientsComponent {
         carData: car,
         clientData: client,
         isCarEdited: true,
-      }
+      },
     });
 
-    this.dialogRef.onClose.pipe(take(1)).subscribe((carData: ICar | undefined) => {
-      if (carData) {
-        const index = client.cars.findIndex((c) => c.id === carData.id);
-        if (index !== -1) {
-          client.cars[index] = carData;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Masina editata',
-            detail: 'Datele despre masina au fost actualizate!',
-          });
+    this.dialogRef.onClose
+      .pipe(take(1))
+      .subscribe((carData: ICar | undefined) => {
+        if (carData) {
+          const index = client.cars.findIndex((c) => c.id === carData.id);
+          if (index !== -1) {
+            client.cars[index] = carData;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Masina editata',
+              detail: 'Datele despre masina au fost actualizate!',
+            });
+          }
         }
-      }
-    });
+      });
   }
 
   /**
@@ -319,5 +237,13 @@ export class ClientsComponent {
     if (this.dialogRef) {
       this.dialogRef.close();
     }
+  }
+
+  private getClients(): void {
+    this.clientsService.getClients()
+    .pipe(take(1))
+    .subscribe((data: IClient[]) => {
+      this.clients = data;
+    });
   }
 }
