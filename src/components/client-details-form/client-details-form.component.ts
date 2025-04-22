@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -33,7 +33,7 @@ import { v4 as uuidv4 } from 'uuid';
   templateUrl: './client-details-form.component.html',
   styleUrl: './client-details-form.component.scss',
 })
-export class AddClientFormComponent {
+export class AddClientFormComponent implements OnInit{
   clientForm!: FormGroup;
   carForm!: FormGroup;
   phoneNumberControl!: FormControl;
