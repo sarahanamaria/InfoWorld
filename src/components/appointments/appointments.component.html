@@ -7,7 +7,6 @@
   [totalRecords]="appointments.length"
   [rows]="5"
 >
-
   <ng-template #caption>
     <div class="flex justify-content-end mb-2">
       <p-button
@@ -24,8 +23,8 @@
       <th>Masina</th>
       <th>Data</th>
       <th>Ora</th>
-      <th>Mod</th>
-      <th>Status</th>
+      <th>Mod contact</th>
+      <th>Status programare</th>
       <th>Actiuni</th>
     </tr>
   </ng-template>
@@ -42,9 +41,11 @@
       <td>{{ appointment.status }}</td>
       <td>
         @if (appointment.status === 'programata') {
-        <p-button icon="pi pi-check" (click)="finalize(appointment)"></p-button>
-        <p-button icon="pi pi-times" (click)="cancel(appointment)"></p-button>
-        }
+        <p-button icon="pi pi-times" class="mr-2" (click)="cancel(appointment)"/>
+        @if (isAdmin) {
+          <p-button icon="pi pi-pencil" class="mr-2" (click)="editAppointment(appointment)" />
+        <p-button icon="pi pi-check" (click)="finalize(appointment)"/>
+        } }
       </td>
     </tr>
   </ng-template>

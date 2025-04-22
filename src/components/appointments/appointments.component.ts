@@ -34,6 +34,8 @@ export class AppointmentsComponent implements OnInit {
   clients: IClient[] = [];
   dialogRef: DynamicDialogRef | null = null;
 
+  readonly isAdmin = true;
+
   constructor(
     private appointmentsService: AppointmentsService,
     private clientsService: ClientsService,
@@ -47,48 +49,69 @@ export class AppointmentsComponent implements OnInit {
   }
 
   addAppointment(): void {
-    this.dialogRef = this.dialogService.open(AppointmentFormComponent, {
-      header: 'Adauga programare',
-      width: '500px',
-      data: {
-        clients: this.clients,
-      },
-    });
-
-    this.dialogRef.onClose
-      .pipe(take(1))
+    this.dialogService
+      .open(AppointmentFormComponent, {
+        header: 'Adauga programare',
+        width: '500px',
+        data: {
+          clients: this.clients,
+          isAdmin: this.isAdmin,
+        },
+      })
+      .onClose.pipe(take(1))
       .subscribe((newAppointment: IAppointment | undefined) => {
         if (newAppointment) {
           newAppointment.id = uuidv4();
           this.appointments.push(newAppointment);
-          this.appointmentsService.updateAppointments(this.appointments);
-
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Programare adaugata',
-            detail: 'Noua programare a fost salvata cu succes!',
-          });
+          this.saveAppointments('Programare adaugata');
         }
       });
   }
 
-  finalize(appointment: IAppointment) {
+  finalize(appointment: IAppointment): void {
     appointment.status = 'finalizata';
+    this.saveAppointments('Programarea a fost marcata ca finalizata');
+  }
+
+  cancel(appointment: IAppointment): void {
+    appointment.status = 'anulata';
+    this.saveAppointments('Programarea a fost anulata');
+  }
+
+
+  editAppointment(appointment: IAppointment): void {
+    this.dialogService
+      .open(AppointmentFormComponent, {
+        header: 'Editeaza programare',
+        width: '500px',
+        closable: true,
+        modal: true,
+        data: {
+          clients: this.clients,
+          existingAppointment: appointment,
+          isAdmin: this.isAdmin,
+        },
+      })
+      .onClose.pipe(take(1))
+      .subscribe((updatedAppointment: IAppointment | undefined) => {
+        if (updatedAppointment) {
+          const index: number = this.appointments.findIndex(
+            (a: IAppointment) => a.id === updatedAppointment.id
+          );
+          if (index !== -1) {
+            this.appointments[index] = updatedAppointment;
+            this.saveAppointments('Programarea a fost actualizata');
+          }
+        }
+      });
+  }
+
+  private saveAppointments(message: string): void {
     this.appointmentsService.updateAppointments(this.appointments);
     this.messageService.add({
       severity: 'success',
-      summary: 'Finalizata',
-      detail: 'Programarea a fost marcata ca finalizata',
-    });
-  }
-
-  cancel(appointment: IAppointment) {
-    appointment.status = 'anulata';
-    this.appointmentsService.updateAppointments(this.appointments);
-    this.messageService.add({
-      severity: 'warn',
-      summary: 'Anulata',
-      detail: 'Programarea a fost anulata',
+      summary: 'Succes',
+      detail: message,
     });
   }
 
