@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -11,10 +11,11 @@ import { IClient } from '@models/client.model';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { ICar } from '@models/car.model';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-appointment-form',
@@ -28,6 +29,8 @@ import { DatePickerModule } from 'primeng/datepicker';
     SelectModule,
     TextareaModule,
     DatePickerModule,
+    InputTextModule,
+    CommonModule,
   ],
 })
 export class AppointmentFormComponent implements OnInit {
@@ -45,6 +48,8 @@ export class AppointmentFormComponent implements OnInit {
   endTimeSlots: string[] = [];
   minDate: Date = new Date();
 
+  isAdmin = false;
+
   constructor(
     private fb: FormBuilder,
     private dialogRef: DynamicDialogRef,
@@ -52,12 +57,11 @@ export class AppointmentFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.clients = this.dialogConfig.data.clients.filter(
-      (client: IClient) =>
-        client.isClientActive && client.cars && client.cars.length > 0
-    );
+    this.initializeClients();
+    this.isAdmin = this.dialogConfig.data.isAdmin;
     this.initForm();
     this.generateTimeSlots();
+    this.handleExistingAppointment();
   }
 
   onClientChange(client: IClient): void {
@@ -68,9 +72,14 @@ export class AppointmentFormComponent implements OnInit {
 
   save(): void {
     if (this.appointmentForm.valid) {
-      const date = this.appointmentForm.value;
+      const date: IAppointment = this.appointmentForm.value;
+      const id: string = this.dialogConfig.data?.existingAppointment?.id ?? '';
       const appointment: IAppointment = {
         ...date,
+        contactValue:
+          date.method === 'telefon' || date.method === 'email'
+            ? date.contactValue
+            : undefined,
         client: date.client,
         car: date.car,
         method: date.method,
@@ -79,11 +88,38 @@ export class AppointmentFormComponent implements OnInit {
         startTime: date.startTime,
         endTime: date.endTime,
         status: 'programata',
-        id: '',
+        id,
       };
 
       this.dialogRef.close(appointment);
     }
+  }
+
+  private initializeClients(): void {
+    this.clients = this.dialogConfig.data.clients.filter(
+      (client: IClient) =>
+        client.isClientActive && client.cars && client.cars.length > 0
+    );
+  }
+
+  private handleExistingAppointment(): void {
+    const existingAppointment = this.dialogConfig.data?.existingAppointment;
+    if (existingAppointment) {
+      this.patchFormWithExistingAppointment(existingAppointment);
+    }
+  }
+
+  private patchFormWithExistingAppointment(existing: IAppointment): void {
+    this.appointmentForm.patchValue({
+      client: existing.client,
+      car: existing.car,
+      method: existing.method,
+      contactValue: existing.contactValue,
+      date: new Date(existing.date.split('-').reverse().join('-')),
+      startTime: existing.startTime ?? null,
+      endTime: existing.endTime ?? null,
+      description: existing.description,
+    });
   }
 
   private initForm(): void {
@@ -91,9 +127,10 @@ export class AppointmentFormComponent implements OnInit {
       client: [null, Validators.required],
       car: [null, Validators.required],
       method: [null, Validators.required],
+      contactValue: [''],
       date: [new Date(), Validators.required],
-      startTime: [null, Validators.required],
-      endTime: [null, Validators.required],
+      startTime: [null],
+      endTime: [null],
       description: ['', Validators.required],
     });
   }
@@ -102,16 +139,18 @@ export class AppointmentFormComponent implements OnInit {
     this.startTimeSlots = [];
     this.endTimeSlots = [];
 
-    for (let hour = 8; hour <= 17; hour++) {
-      this.startTimeSlots.push(`${hour}:30`);
-      if (hour < 17) {
-        this.startTimeSlots.push(`${hour + 1}:00`);
+    for (let hour = 8; hour < 17; hour++) {
+      this.startTimeSlots.push(`${hour}:00`);
+      if (hour <= 16) {
+        this.startTimeSlots.push(`${hour}:30`);
       }
     }
 
-    for (let hour = 9; hour <= 18; hour++) {
-      this.endTimeSlots.push(`${hour}:00`);
-      if (hour < 18) {
+    for (let hour = 8; hour <= 17; hour++) {
+      if (hour > 8) {
+        this.endTimeSlots.push(`${hour}:00`);
+      }
+      if (hour < 17) {
         this.endTimeSlots.push(`${hour}:30`);
       }
     }

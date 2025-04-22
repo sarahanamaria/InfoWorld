@@ -29,16 +29,18 @@
       [minDate]="minDate"
     ></p-datepicker>
 
-    <p-select
-      [options]="startTimeSlots"
-      placeholder="Ora inceput"
-      formControlName="startTime"
-    ></p-select>
-    <p-select
-      [options]="endTimeSlots"
-      placeholder="Ora final"
-      formControlName="endTime"
-    ></p-select>
+    @if (isAdmin) {
+      <p-select
+        [options]="startTimeSlots"
+        placeholder="Ora inceput"
+        formControlName="startTime"
+      ></p-select>
+      <p-select
+        [options]="endTimeSlots"
+        placeholder="Ora final"
+        formControlName="endTime"
+      ></p-select>
+    }
   </div>
 
   <p-select
@@ -48,6 +50,24 @@
     placeholder="Metoda de contact"
     formControlName="method"
   ></p-select>
+
+  @if (appointmentForm.get('method')?.value === 'telefon') {
+  <input
+    pInputText
+    placeholder="Numar de telefon"
+    formControlName="contactValue"
+    [ngClass]="{ 'p-invalid': appointmentForm.get('phoneNumber')?.invalid }"
+  />
+  }
+
+  @if (appointmentForm.get('method')?.value === 'email') {
+  <input
+    pInputText
+    placeholder="Adresa de email"
+    formControlName="contactValue"
+    [ngClass]="{ 'p-invalid': appointmentForm.get('email')?.invalid }"
+  />
+  }
 
   <textarea
     rows="4"
