@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "firstName": "Andrei",
+    "lastName": "Ionescu",
+    "email": "andrei.ionescu@mail.com",
+    "phoneNumbers": ["0723123456"],
+    "isClientActive": true,
+    "cars": [
+      {
+        "id": 101,
+        "licensePlate": "B-123-XYZ",
+        "chassis": "WVWZZZ1JZXW000001",
+        "brand": "Volkswagen",
+        "model": "Golf 7",
+        "year": 2017,
+        "engineType": "Diesel",
+        "isCarActive": true
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "firstName": "Maria",
+    "lastName": "Popa",
+    "email": "maria.popa@gmail.com",
+    "phoneNumbers": ["0733555666", "0744999888"],
+    "isClientActive": true,
+    "cars": [
+      {
+        "id": 102,
+        "licensePlate": "CJ-98-POP",
+        "chassis": "WDB12345678900001",
+        "brand": "Mercedes-Benz",
+        "model": "A-Class",
+        "year": 2021,
+        "engineType": "Gasoline",
+        "isCarActive": true
+      },
+      {
+        "id": 103,
+        "licensePlate": "CJ-77-MRY",
+        "chassis": "WDB98765432100001",
+        "brand": "Renault",
+        "model": "Clio",
+        "year": 2015,
+        "engineType": "Hybrid",
+        "isCarActive": true
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "firstName": "Ioana",
+    "lastName": "Mihai",
+    "email": "ioana.mihai@domain.com",
+    "phoneNumbers": ["0722000111", "0733000222", "0744000333"],
+    "isClientActive": false,
+    "cars": [
+      {
+        "id": 104,
+        "licensePlate": "TM-10-IOA",
+        "chassis": "1HGCM82633A004352",
+        "brand": "Honda",
+        "model": "Civic",
+        "year": 2009,
+        "engineType": "Gasoline",
+        "isCarActive": true
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "firstName": "Daniel",
+    "lastName": "Lupu",
+    "email": "dan.lupu@yahoo.com",
+    "phoneNumbers": ["0755111222"],
+    "isClientActive": true,
+    "cars": [
+      {
+        "id": 105,
+        "licensePlate": "IF-44-DNL",
+        "chassis": "WAUZZZ8K9AA000123",
+        "brand": "Audi",
+        "model": "A4",
+        "year": 2012,
+        "engineType": "Diesel",
+        "isCarActive": true
+      },
+      {
+        "id": 106,
+        "licensePlate": "IF-55-TES",
+        "chassis": "5YJ3E1EA7HF000000",
+        "brand": "Tesla",
+        "model": "Model 3",
+        "year": 2020,
+        "engineType": "Electric",
+        "isCarActive": true
+      }
+    ]
+  }
+]
