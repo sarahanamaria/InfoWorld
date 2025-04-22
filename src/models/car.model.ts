@@ -1,7 +1,7 @@
 import { EngineTypeEnum } from "enums/engine-type.enum";
 
 export interface ICar {
-  id: number;
+  id: string;
   licensePlate: string;
   chassis: string;
   brand: string;
