@@ -101,7 +101,9 @@
                   <th>An fabricatie</th>
                   <th>Motorizare</th>
                   <th>Editeaza</th>
-                  <th>Sterge</th>
+                  @if (client.cars.length > 1) {
+                    <th>Sterge</th>
+                  }
                   <th>Modifica stare</th>
                 </tr>
               </ng-template>
@@ -141,14 +143,16 @@
                     <i
                       class="pi pi-pencil cursor-pointer" (click)="editCar(car, client)"></i>
                   </td>
-                  <td>
-                    <i
-                      class="pi pi-trash cursor-pointer"
-                      tooltipPosition="top"
-                      [pTooltip]="'Sterge masina'"
-                      (click)="deleteCar(car, client)"
-                    ></i>
-                  </td>
+                  @if (client.cars.length > 1) {
+                    <td>
+                      <i
+                        class="pi pi-trash cursor-pointer"
+                        tooltipPosition="top"
+                        [pTooltip]="'Sterge masina'"
+                        (click)="deleteCar(car, client)"
+                      ></i>
+                    </td>
+                  }
                   <td>
                     <i
                       class="pi pi-power-off cursor-pointer"
