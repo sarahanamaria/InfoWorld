@@ -1,0 +1,177 @@
+<div class="flex flex-column mt-6">
+  <p-toast />
+  <p-table
+    [value]="clients"
+    [expandedRowKeys]="expandedClientRows"
+    dataKey="id"
+    paginator="true"
+    [rows]="3"
+    [totalRecords]="clients.length"
+    (onRowExpand)="onClientToggle($event, true)"
+    (onRowCollapse)="onClientToggle($event, false)"
+  >
+    <ng-template #caption>
+      <div class="flex justify-content-end">
+        <p-button
+          label="Adauga clienti"
+          icon="pi pi-user-plus"
+          (onClick)="addClient()"
+        ></p-button>
+      </div>
+    </ng-template>
+
+    <ng-template #header>
+      <tr>
+        <!-- add an empty th for the toggling button for alignment -->
+        <th style="width: 3rem"></th>
+        <th>Nume</th>
+        <th>Email</th>
+        <th>Telefon</th>
+        <th># masini</th>
+        <th>Editeaza</th>
+        <th>Sterge</th>
+        <th>Modifica stare</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-client let-expanded="expanded">
+      <tr>
+        <td>
+          <!-- Create the toggling button for expanding a row -->
+          <p-button
+            pRipple
+            [pRowToggler]="client"
+            [text]="true"
+            [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+          />
+        </td>
+        <td>
+          <span [classList]="applyDisabledClasses(client.isClientActive)">
+            {{`${client.firstName} ${client.lastName}`}}
+          </span>
+        </td>
+        <td>
+          <span [classList]="applyDisabledClasses(client.isClientActive)">
+            {{ client.email }}
+          </span>
+        </td>
+        <td>
+          <span [classList]="applyDisabledClasses(client.isClientActive)">
+            {{ client.phoneNumbers.join(", ") }}
+          </span>
+        </td>
+        <td>
+          <span [classList]="applyDisabledClasses(client.isClientActive)">
+            {{ client.cars.length }}
+          </span>
+        </td>
+        <td><i class="pi pi-pencil cursor-pointer" (click)="editClient(client)"></i></td>
+        <td>
+          <i
+            class="pi pi-trash cursor-pointer"
+            tooltipPosition="top"
+            [pTooltip]="'Sterge client'"
+            (click)="deleteClient(client)"
+          ></i>
+        <td>
+          <i class="pi pi-power-off cursor-pointer"
+            (click)="changeClientStatus(client)"
+            tooltipPosition="top"
+            [pTooltip]="client.isClientActive ? 'Dezactiveaza client' : 'Activeaza client'">
+          </i>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #expandedrow let-client>
+      <tr>
+        <td colspan="7">
+          <div>
+            <h5>
+              Masinile clientului {{ client.firstName }} {{ client.lastName }}
+            </h5>
+
+            <p-table [value]="client.cars" dataKey="id">
+              <ng-template #header>
+                <tr>
+                  <th>Nr. inmatriculare</th>
+                  <th>Serie sasiu</th>
+                  <th>Marca</th>
+                  <th>Model</th>
+                  <th>An fabricatie</th>
+                  <th>Motorizare</th>
+                  <th>Editeaza</th>
+                  @if (client.cars.length > 1) {
+                    <th>Sterge</th>
+                  }
+                  <th>Modifica stare</th>
+                </tr>
+              </ng-template>
+              <ng-template #body let-car>
+                <tr>
+                  <td>
+                    <span [classList]="applyDisabledClasses(car.isCarActive)">
+                      {{ car.licensePlate }}
+                    </span>
+                  </td>
+                  <td>
+                    <span [classList]="applyDisabledClasses(car.isCarActive)">
+                      {{ car.chassis }}
+                    </span>
+                  </td>
+                  <td>
+                    <span [classList]="applyDisabledClasses(car.isCarActive)">
+                      {{ car.brand }}
+                    </span>
+                  </td>
+                  <td>
+                    <span [classList]="applyDisabledClasses(car.isCarActive)">
+                      {{ car.model }}
+                    </span>
+                  </td>
+                  <td>
+                    <span [classList]="applyDisabledClasses(car.isCarActive)">
+                      {{ car.year }}
+                    </span>
+                  </td>
+                  <td>
+                    <span [classList]="applyDisabledClasses(car.isCarActive)">
+                      {{ car.engineType }}
+                    </span>
+                  </td>
+                  <td>
+                    <i
+                      class="pi pi-pencil cursor-pointer" (click)="editCar(car, client)"></i>
+                  </td>
+                  @if (client.cars.length > 1) {
+                    <td>
+                      <i
+                        class="pi pi-trash cursor-pointer"
+                        tooltipPosition="top"
+                        [pTooltip]="'Sterge masina'"
+                        (click)="deleteCar(car, client)"
+                      ></i>
+                    </td>
+                  }
+                  <td>
+                    <i
+                      class="pi pi-power-off cursor-pointer"
+                      (click)="changeCarStatus(car)"
+                      tooltipPosition="top"
+                      [pTooltip]="car.isCarActive? 'Dezactiveaza masina' : 'Activeaza masina'"
+                    ></i>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template #emptymessage>
+                <tr>
+                  <td colspan="9">Clientul nu are inca masini adaugate</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -1,6 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+@use "primeflex/primeflex.scss";
+@import "primeicons/primeicons.css"; // import primeng's icons
+
 * {
   font-family: sans-serif;
   padding: 0;
   margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
 }

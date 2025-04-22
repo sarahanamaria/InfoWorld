@@ -1,0 +1,80 @@
+@if (formMode === 'clientAdd' || formMode === 'clientEdit') {
+  <form [formGroup]="clientForm" (ngSubmit)="submit()" class="mt-4 flex-column">
+    <div class="flex justify-content-between gap-2">
+      <p-floatLabel>
+        <input id="firstName" type="text" pInputText formControlName="firstName" />
+        <label for="firstName">Prenume</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="lastName" type="text" pInputText formControlName="lastName" />
+        <label for="lastName">Nume</label>
+      </p-floatLabel>
+    </div>
+
+    <p-floatLabel class="mt-5">
+      <input id="email" type="email" pInputText formControlName="email" class="w-full" />
+      <label for="email">Adresa email</label>
+    </p-floatLabel>
+
+    <div class="flex align-items-end gap-2 mt-5">
+      <p-floatLabel class="flex-1">
+        <input id="phone" type="tel" pInputText [formControl]="phoneNumberControl" class="w-full" />
+        <label for="phone">Numar telefon</label>
+      </p-floatLabel>
+      <p-button label="Adauga" (onClick)="addPhoneNumber()" />
+    </div>
+
+    @if (phoneNumbersArray.length) {
+      <div class="flex flex-wrap row-gap-3 column-gap-3 mt-2">
+      @for (number of phoneNumbersArray.controls; track $index) {
+        <p-tag class="pi pi-phone cursor-pointer" severity="info" [value]="number.value" (click)="removePhoneNumber($index)"></p-tag>
+      }
+    </div>
+    }
+
+    @if (phoneNumbersArray.controls.length) {
+      <div class="mt-2 flex justify-content-end">
+        <p-button type="submit" [label]="formMode === 'clientEdit' ? 'Salveaza' : 'Adauga masina'" [icon]="`pi ${formMode === 'clientEdit' ? 'pi-save' : 'pi-car'}`" [disabled]="!clientForm.valid" tooltipPosition="top" [pTooltip]="!clientForm.valid ? 'Unul sau mai multe campuri nu sunt completate corect!' : ''"/>
+      </div>
+    }
+  </form>
+} @else if (formMode === 'carEdit' || formMode === 'carAdd') {
+  @if (totalCars.length) {
+    <span>Total masini adaugate: {{totalCars.length}}</span>
+  }
+  <form class="flex flex-wrap justify-content-between pt-4" [formGroup]="carForm">
+    <div class="flex flex-column row-gap-4">
+      <p-floatLabel>
+        <input id="licensePlate" type="text" pInputText formControlName="licensePlate" />
+        <label for="licensePlate">Nr. Inmatriculare</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="chassis" type="text" pInputText formControlName="chassis" />
+        <label for="chassis">Serie Sasiu</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="brand" type="text" pInputText formControlName="brand" />
+        <label for="brand">Marca</label>
+      </p-floatLabel>
+    </div>
+    <div class="flex flex-column row-gap-4">
+      <p-floatLabel>
+        <input id="model" type="text" pInputText formControlName="model" />
+        <label for="model">Model</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input class="w-full" id="year" type="number" pInputText formControlName="year" min="1900" max="2025"/>
+        <label for="year">An fabricatie</label>
+      </p-floatLabel>
+    </div>
+    <p-select class="w-full mt-4" formControlName="engineType" appendTo="body" [options]="engineTypes" optionLabel="name" placeholder="Selecteaza o motorizare"/>
+  </form>
+  <div class="flex justify-content-end pt-4">
+    @if (formMode === 'carAdd') {
+      <p-button tooltipPosition="top" [pTooltip]="carForm.valid ? '' : 'Completeaza formularul pentru a adauga'" label="Adauga masina" icon="pi pi-plus" class="mr-2" (onClick)="addCar()" [disabled]="!carForm.valid"></p-button>
+    }
+    <p-button tooltipPosition="top" [pTooltip]="totalCars.length ? '' : 'Trebuie sa adaugi cel putin o masina pentru a continua'" label="Salveaza date" icon="pi pi-save" (onClick)="saveData()" [disabled]="!totalCars.length && formMode === 'carAdd'"/>
+  </div>
+}
+
+

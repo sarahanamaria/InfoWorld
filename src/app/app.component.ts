@@ -1,12 +1,31 @@
 import { Component } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { RouterOutlet } from '@angular/router';
+import { MenuItem } from 'primeng/api';
+import { MenubarModule } from 'primeng/menubar';
+import { RoutingPathsEnum } from '../enums/routing-paths.enum';
 
 @Component({
   selector: 'app-root',
-  imports: [ButtonModule],
+  imports: [MenubarModule, RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'infoworld';
+  menuItems: MenuItem[] = [
+    {
+      label: 'Clienti',
+      icon: 'pi pi-user',
+      routerLink: RoutingPathsEnum.Clients,
+    },
+    {
+      label: 'Programari Clienti',
+      icon: 'pi pi-clock',
+      routerLink: RoutingPathsEnum.Appointments,
+    },
+    {
+      label: 'Istoric Service',
+      icon: 'pi pi-history',
+      routerLink: RoutingPathsEnum.History,
+    },
+  ];
 }
