@@ -35,6 +35,7 @@ export class AppointmentsComponent implements OnInit {
   appointments: IAppointment[] = [];
   clients: IClient[] = [];
   dialogRef: DynamicDialogRef | null = null;
+  expandedAppointmentRows: { [key: string]: boolean } = {};
 
   readonly appointmentStatusEnum = AppointmentStatusEnum;
   readonly isAdmin = true;
@@ -133,6 +134,15 @@ export class AppointmentsComponent implements OnInit {
         }
       }
     });
+  }
+
+  onAppointmentToggle(event: any, expand: boolean): void {
+    const appointment = event.data as IAppointment;
+    if (expand) {
+      this.expandedAppointmentRows[appointment.id] = true;
+    } else {
+      delete this.expandedAppointmentRows[appointment.id];
+    }
   }
 
   private saveAppointments(message: string): void {
