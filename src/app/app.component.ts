@@ -22,10 +22,5 @@ export class AppComponent {
       icon: 'pi pi-clock',
       routerLink: RoutingPathsEnum.Appointments,
     },
-    {
-      label: 'Istoric Service',
-      icon: 'pi pi-history',
-      routerLink: RoutingPathsEnum.History,
-    },
   ];
 }
