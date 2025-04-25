@@ -17,13 +17,14 @@ import { AppointmentFormComponent } from '@components/appointment-form/appointme
 import { v4 as uuidv4 } from 'uuid';
 import { AppointmentStatusEnum } from 'enums/appointment-status.enum';
 import { AppointmentHistoryFormComponent } from '@components/appointment-history-form/appointment-history-form.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-appointments',
   standalone: true,
   templateUrl: './appointments.component.html',
   styleUrls: ['./appointments.component.scss'],
-  imports: [TableModule, ButtonModule, DynamicDialogModule, Toast],
+  imports: [TableModule, ButtonModule, DynamicDialogModule, Toast, TooltipModule],
   providers: [
     AppointmentsService,
     ClientsService,

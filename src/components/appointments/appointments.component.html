@@ -56,10 +56,10 @@
       <td>{{ appointment.status }}</td>
       <td>
         @if (appointment.status === appointmentStatusEnum.Scheduled) {
-        <p-button icon="pi pi-times" class="mr-2" (click)="cancel(appointment)"/>
+        <p-button icon="pi pi-times" tooltipPosition="top" [pTooltip]="'Anuleaza programarea'" class="mr-2" (click)="cancel(appointment)"/>
         @if (isAdmin) {
-          <p-button icon="pi pi-pencil" class="mr-2" (click)="editAppointment(appointment)" />
-          <p-button icon="pi pi-history" (onClick)="finalizeWithHistory(appointment)" label="Finalizeaza cu istoric"/>
+          <p-button icon="pi pi-pencil" tooltipPosition="top" [pTooltip]="'Editeaza programarea'" class="mr-2" (click)="editAppointment(appointment)" />
+          <p-button icon="pi pi-check-circle" (onClick)="finalizeWithHistory(appointment)" tooltipPosition="top" [pTooltip]="'Finalizeaza programarea cu istoric'"/>
         } }
       </td>
     </tr>
