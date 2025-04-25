@@ -1,9 +1,16 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { AppointmentsService } from '@services/appointments.service';
 import { ButtonModule } from 'primeng/button';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TextareaModule } from 'primeng/textarea';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-appointment-history-form',
@@ -14,13 +21,19 @@ import { TextareaModule } from 'primeng/textarea';
     ReactiveFormsModule,
     InputNumberModule,
     TextareaModule,
-    ButtonModule
+    ButtonModule,
   ],
 })
 export class AppointmentHistoryFormComponent implements OnInit {
   historyForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private dialogRef: DynamicDialogRef, private cd: ChangeDetectorRef) {}
+  constructor(
+    private fb: FormBuilder,
+    private dialogRef: DynamicDialogRef,
+    private dialogConfig: DynamicDialogConfig,
+    private cd: ChangeDetectorRef,
+    private appoinmentService: AppointmentsService
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -42,6 +55,21 @@ export class AppointmentHistoryFormComponent implements OnInit {
       reception: ['', Validators.required],
       processing: ['', Validators.required],
       duration: [null, [Validators.required, Validators.min(10)]],
+    });
+
+    this.findAppointmentAndPatch();
+  }
+
+  private findAppointmentAndPatch(): void {
+    this.appoinmentService.getAppointments().pipe(take(1)).subscribe((appointments) => {
+      const appointment = appointments.find(
+        (a) => a.id === this.dialogConfig.data.appointment.id
+      );
+      if (appointment) {
+        this.historyForm.patchValue({
+          reception: appointment.serviceHistory.reception,
+        });
+      }
     });
   }
 }
