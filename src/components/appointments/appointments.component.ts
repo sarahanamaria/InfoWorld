@@ -13,9 +13,10 @@ import {
 } from 'primeng/dynamicdialog';
 import { take } from 'rxjs';
 import { Toast } from 'primeng/toast';
-import { AppointmentFormComponent } from '@components/appointment-form/appointment-form/appointment-form.component';
+import { AppointmentFormComponent } from '@components/appointment-form/appointment-form.component';
 import { v4 as uuidv4 } from 'uuid';
 import { AppointmentStatusEnum } from 'enums/appointment-status.enum';
+import { AppointmentHistoryFormComponent } from '@components/appointment-history-form/appointment-history-form.component';
 
 @Component({
   selector: 'app-appointments',
@@ -35,6 +36,7 @@ export class AppointmentsComponent implements OnInit {
   clients: IClient[] = [];
   dialogRef: DynamicDialogRef | null = null;
 
+  readonly appointmentStatusEnum = AppointmentStatusEnum;
   readonly isAdmin = true;
 
   constructor(
@@ -107,6 +109,22 @@ export class AppointmentsComponent implements OnInit {
           }
         }
       });
+  }
+
+  finalizeWithHistory(appointment: IAppointment): void {
+    this.dialogRef = this.dialogService.open(AppointmentHistoryFormComponent, {
+      header: 'Finalizeaza cu istoric service',
+      width: '600px',
+      data: { appointment },
+    });
+
+    this.dialogRef.onClose.pipe(take(1)).subscribe((serviceHistory) => {
+      if (serviceHistory) {
+        appointment.status = AppointmentStatusEnum.Finalized;
+        appointment.serviceHistory = serviceHistory;
+        this.saveAppointments('Programarea a fost finalizata cu istoric');
+      }
+    });
   }
 
   private saveAppointments(message: string): void {
