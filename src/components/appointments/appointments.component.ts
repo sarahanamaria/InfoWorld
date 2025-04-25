@@ -107,16 +107,28 @@ export class AppointmentsComponent implements OnInit {
 
   finalizeWithHistory(appointment: IAppointment): void {
     this.dialogRef = this.dialogService.open(AppointmentHistoryFormComponent, {
-      header: 'Finalizeaza cu istoric service',
-      width: '600px',
-      data: { appointment },
+      header: 'Istoric service',
+      width: '500px',
+      data: {
+        appointment
+      }
     });
 
-    this.dialogRef.onClose.pipe(take(1)).subscribe((serviceHistory) => {
-      if (serviceHistory) {
-        appointment.status = AppointmentStatusEnum.Finalized;
-        appointment.serviceHistory = serviceHistory;
-        this.saveAppointments('Programarea a fost finalizata cu istoric');
+    this.dialogRef.onClose.pipe(take(1)).subscribe((historyData) => {
+      if (historyData) {
+        const index: number = this.appointments.findIndex((app: IAppointment) => app.id === appointment.id);
+        if (index !== -1) {
+          this.appointments[index] = {
+            ...appointment,
+            status: AppointmentStatusEnum.Finalized,
+            serviceHistory: {
+              reception: historyData.reception,
+              processing: historyData.processing,
+              duration: historyData.duration,
+            },
+          };
+          this.saveAppointments('Programarea a fost finalizata cu istoric.');
+        }
       }
     });
   }
