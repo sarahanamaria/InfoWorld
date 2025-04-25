@@ -90,6 +90,11 @@ export class AppointmentFormComponent implements OnInit {
         startTime: date.startTime,
         endTime: date.endTime,
         status: AppointmentStatusEnum.Scheduled,
+        serviceHistory: {
+          processing: '',
+          reception: this.appointmentForm.value.description,
+          duration: 0,
+        },
         id,
       };
 
