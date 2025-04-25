@@ -1,0 +1,37 @@
+<form
+  [formGroup]="historyForm"
+  (ngSubmit)="save()"
+  class="flex flex-column gap-4 pt-2"
+>
+  <textarea
+    pTextarea
+    formControlName="reception"
+    placeholder="Probleme descoperite vizual / declarate de client"
+    rows="4"
+  ></textarea>
+
+  <textarea
+    pTextarea
+    formControlName="processing"
+    placeholder="Operatiuni efectuate, piese schimbate, reparatii"
+    rows="4"
+  ></textarea>
+
+  <p-inputNumber
+    formControlName="duration"
+    placeholder="Durata reparatie (minute)"
+    [step]="10"
+    [min]="10"
+    [suffix]="' min'"
+    class="w-full"
+  ></p-inputNumber>
+
+  <div class="flex justify-content-end pt-2">
+    <p-button
+      label="Salveaza"
+      type="submit"
+      icon="pi pi-check"
+      [disabled]="!historyForm.valid || historyForm.value.duration % 10 !== 0"
+    />
+  </div>
+</form>
