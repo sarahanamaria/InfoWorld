@@ -73,16 +73,10 @@ export class AppointmentsComponent implements OnInit {
       });
   }
 
-  finalize(appointment: IAppointment): void {
-    appointment.status = AppointmentStatusEnum.Finalized;
-    this.saveAppointments('Programarea a fost marcata ca finalizata');
-  }
-
   cancel(appointment: IAppointment): void {
     appointment.status = AppointmentStatusEnum.Canceled;
     this.saveAppointments('Programarea a fost anulata');
   }
-
 
   editAppointment(appointment: IAppointment): void {
     this.dialogService
