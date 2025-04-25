@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import IAppointment from '@models/appointment.model';
 import { IClient } from '@models/client.model';
 import { AppointmentsService } from '@services/appointments.service';
@@ -11,20 +11,27 @@ import {
   DynamicDialogModule,
   DynamicDialogRef,
 } from 'primeng/dynamicdialog';
-import { take } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { Toast } from 'primeng/toast';
 import { AppointmentFormComponent } from '@components/appointment-form/appointment-form.component';
 import { v4 as uuidv4 } from 'uuid';
 import { AppointmentStatusEnum } from 'enums/appointment-status.enum';
 import { AppointmentHistoryFormComponent } from '@components/appointment-history-form/appointment-history-form.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { UserStatusService } from '@services/user-status.service';
 
 @Component({
   selector: 'app-appointments',
   standalone: true,
   templateUrl: './appointments.component.html',
   styleUrls: ['./appointments.component.scss'],
-  imports: [TableModule, ButtonModule, DynamicDialogModule, Toast, TooltipModule],
+  imports: [
+    TableModule,
+    ButtonModule,
+    DynamicDialogModule,
+    Toast,
+    TooltipModule,
+  ],
   providers: [
     AppointmentsService,
     ClientsService,
@@ -32,23 +39,26 @@ import { TooltipModule } from 'primeng/tooltip';
     DialogService,
   ],
 })
-export class AppointmentsComponent implements OnInit {
+export class AppointmentsComponent implements OnInit, OnDestroy {
   appointments: IAppointment[] = [];
   clients: IClient[] = [];
   dialogRef: DynamicDialogRef | null = null;
   expandedAppointmentRows: { [key: string]: boolean } = {};
+  isAdmin = true;
 
   readonly appointmentStatusEnum = AppointmentStatusEnum;
-  readonly isAdmin = true;
+  private unsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     private appointmentsService: AppointmentsService,
     private clientsService: ClientsService,
     private messageService: MessageService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private userStatusService: UserStatusService
   ) {}
 
   ngOnInit(): void {
+    this.getUserStatus();
     this.loadAppointments();
     this.loadClients();
   }
@@ -62,7 +72,6 @@ export class AppointmentsComponent implements OnInit {
         modal: true,
         data: {
           clients: this.clients,
-          isAdmin: this.isAdmin,
         },
       })
       .onClose.pipe(take(1))
@@ -90,7 +99,6 @@ export class AppointmentsComponent implements OnInit {
         data: {
           clients: this.clients,
           existingAppointment: appointment,
-          isAdmin: this.isAdmin,
         },
       })
       .onClose.pipe(take(1))
@@ -114,13 +122,15 @@ export class AppointmentsComponent implements OnInit {
       modal: true,
       closable: true,
       data: {
-        appointment
-      }
+        appointment,
+      },
     });
 
     this.dialogRef.onClose.pipe(take(1)).subscribe((historyData) => {
       if (historyData) {
-        const index: number = this.appointments.findIndex((app: IAppointment) => app.id === appointment.id);
+        const index: number = this.appointments.findIndex(
+          (app: IAppointment) => app.id === appointment.id
+        );
         if (index !== -1) {
           this.appointments[index] = {
             ...appointment,
@@ -144,6 +154,11 @@ export class AppointmentsComponent implements OnInit {
     } else {
       delete this.expandedAppointmentRows[appointment.id];
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   private saveAppointments(message: string): void {
@@ -171,5 +186,12 @@ export class AppointmentsComponent implements OnInit {
       .subscribe((data) => {
         this.clients = data;
       });
+  }
+
+  private getUserStatus(): void {
+    this.userStatusService
+      .getIsAdmin()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((isAdmin) => (this.isAdmin = isAdmin));
   }
 }

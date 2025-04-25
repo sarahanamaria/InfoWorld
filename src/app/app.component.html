@@ -1,4 +1,8 @@
 <div class="h-full w-11 flex flex-column mx-auto py-4">
-  <p-menubar [model]="menuItems"/>
+  <p-menubar [model]="menuItems">
+    <ng-template #end>
+      <i class="pi pi-shield mr-2 cursor-pointer" pTooltip="Apasa pentru a schimba userul in {{isAdmin ? 'client' : 'administrator'}}" (click)="setAdminStatus()"></i>
+    </ng-template>
+  </p-menubar>
   <router-outlet></router-outlet>
 </div>
