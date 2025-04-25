@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TextareaModule } from 'primeng/textarea';
+import { TooltipModule } from 'primeng/tooltip';
 import { take } from 'rxjs';
 
 @Component({
@@ -22,6 +23,7 @@ import { take } from 'rxjs';
     InputNumberModule,
     TextareaModule,
     ButtonModule,
+    TooltipModule
   ],
 })
 export class AppointmentHistoryFormComponent implements OnInit {

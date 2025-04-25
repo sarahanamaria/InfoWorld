@@ -33,6 +33,8 @@
       type="submit"
       icon="pi pi-check"
       [disabled]="!historyForm.valid || historyForm.value.duration % 10 !== 0"
+      [pTooltip]="historyForm.valid ? '' : 'Completeaza toate campurile'"
+      tooltipPosition="top"
     />
   </div>
 </form>

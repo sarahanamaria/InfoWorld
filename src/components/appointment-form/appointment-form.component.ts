@@ -18,6 +18,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { AppointmentMethodEnum } from 'enums/appointment-method.enum';
 import { AppointmentStatusEnum } from 'enums/appointment-status.enum';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-appointment-form',
@@ -33,6 +34,7 @@ import { AppointmentStatusEnum } from 'enums/appointment-status.enum';
     DatePickerModule,
     InputTextModule,
     CommonModule,
+    TooltipModule
   ],
 })
 export class AppointmentFormComponent implements OnInit {
