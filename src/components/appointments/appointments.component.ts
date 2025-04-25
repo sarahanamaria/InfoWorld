@@ -109,6 +109,8 @@ export class AppointmentsComponent implements OnInit {
     this.dialogRef = this.dialogService.open(AppointmentHistoryFormComponent, {
       header: 'Istoric service',
       width: '500px',
+      modal: true,
+      closable: true,
       data: {
         appointment
       }
