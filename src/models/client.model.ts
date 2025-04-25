@@ -1,7 +1,7 @@
 import { ICar } from './car.model';
 
 export interface IClient {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;

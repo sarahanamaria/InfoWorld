@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": "02970cbe-036e-4337-8e25-56781aa3fdd6",
     "firstName": "Andrei",
     "lastName": "Ionescu",
     "email": "andrei.ionescu@mail.com",
@@ -8,7 +8,7 @@
     "isClientActive": true,
     "cars": [
       {
-        "id": 101,
+        "id": "8efcf996-96c7-4dab-8dbd-cf29ab0b0707",
         "licensePlate": "B-123-XYZ",
         "chassis": "WVWZZZ1JZXW000001",
         "brand": "Volkswagen",
@@ -20,7 +20,7 @@
     ]
   },
   {
-    "id": 2,
+    "id": "dd6860a5-d279-4b4b-8734-ac4a5ec06143",
     "firstName": "Maria",
     "lastName": "Popa",
     "email": "maria.popa@gmail.com",
@@ -28,7 +28,7 @@
     "isClientActive": true,
     "cars": [
       {
-        "id": 102,
+        "id": "e042a6a7-abbf-4b5c-9e64-30904508f4f0",
         "licensePlate": "CJ-98-POP",
         "chassis": "WDB12345678900001",
         "brand": "Mercedes-Benz",
@@ -38,7 +38,7 @@
         "isCarActive": true
       },
       {
-        "id": 103,
+        "id": "cc4c16f6-3fae-4b37-8f11-9d70043fc77f",
         "licensePlate": "CJ-77-MRY",
         "chassis": "WDB98765432100001",
         "brand": "Renault",
@@ -50,7 +50,7 @@
     ]
   },
   {
-    "id": 3,
+    "id": "b858f72b-e674-4731-bb8a-f64d1bade7a1",
     "firstName": "Ioana",
     "lastName": "Mihai",
     "email": "ioana.mihai@domain.com",
@@ -58,7 +58,7 @@
     "isClientActive": false,
     "cars": [
       {
-        "id": 104,
+        "id": "714fdc45-396a-4768-97a1-2d772cda0cac",
         "licensePlate": "TM-10-IOA",
         "chassis": "1HGCM82633A004352",
         "brand": "Honda",
@@ -70,7 +70,7 @@
     ]
   },
   {
-    "id": 4,
+    "id": "f3ffb4bd-ecde-45c0-b539-bece2db41b1e",
     "firstName": "Daniel",
     "lastName": "Lupu",
     "email": "dan.lupu@yahoo.com",
@@ -78,7 +78,7 @@
     "isClientActive": true,
     "cars": [
       {
-        "id": 105,
+        "id": "2083e28a-3d2b-4642-988b-b63bba28a993",
         "licensePlate": "IF-44-DNL",
         "chassis": "WAUZZZ8K9AA000123",
         "brand": "Audi",
@@ -88,7 +88,7 @@
         "isCarActive": true
       },
       {
-        "id": 106,
+        "id": "8e9d06ea-7808-4ea5-955b-7a0c411a9c6b",
         "licensePlate": "IF-55-TES",
         "chassis": "5YJ3E1EA7HF000000",
         "brand": "Tesla",

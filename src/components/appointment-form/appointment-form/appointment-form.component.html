@@ -1,0 +1,87 @@
+<form
+  [formGroup]="appointmentForm"
+  class="flex flex-column gap-3"
+  (ngSubmit)="save()"
+>
+  <p-select
+    placeholder="Selecteaza client"
+    optionLabel="firstName"
+    [options]="clients"
+    formControlName="client"
+    (onChange)="onClientChange($event.value)"
+  ></p-select>
+
+  <p-select
+    placeholder="Selecteaza masina"
+    emptyMessage="Selecteaza clientul mai intai"
+    optionLabel="licensePlate"
+    [options]="selectedClientCars"
+    formControlName="car"
+  ></p-select>
+
+  <div class="flex gap-2">
+    <p-datepicker
+      formControlName="date"
+      dateFormat="dd-mm-yy"
+      showIcon="true"
+      placeholder="Selecteaza data"
+      appendTo="body"
+      [minDate]="minDate"
+    ></p-datepicker>
+
+    @if (isAdmin) {
+      <p-select
+        [options]="startTimeSlots"
+        placeholder="Ora inceput"
+        formControlName="startTime"
+      ></p-select>
+      <p-select
+        [options]="endTimeSlots"
+        placeholder="Ora final"
+        formControlName="endTime"
+      ></p-select>
+    }
+  </div>
+
+  <p-select
+    [options]="contactMethods"
+    optionLabel="label"
+    optionValue="value"
+    placeholder="Metoda de contact"
+    formControlName="method"
+  ></p-select>
+
+  @if (appointmentForm.get('method')?.value === 'telefon') {
+  <input
+    pInputText
+    placeholder="Numar de telefon"
+    formControlName="contactValue"
+    [ngClass]="{ 'p-invalid': appointmentForm.get('phoneNumber')?.invalid }"
+  />
+  }
+
+  @if (appointmentForm.get('method')?.value === 'email') {
+  <input
+    pInputText
+    placeholder="Adresa de email"
+    formControlName="contactValue"
+    [ngClass]="{ 'p-invalid': appointmentForm.get('email')?.invalid }"
+  />
+  }
+
+  <textarea
+    rows="4"
+    pTextarea
+    placeholder="Ce se doreste a fi facut la masina"
+    formControlName="description"
+  ></textarea>
+
+  <div class="flex justify-content-end pt-3">
+    <p-button
+      label="Salveaza"
+      type="submit"
+      icon="pi pi-check"
+      [disabled]="!appointmentForm.valid"
+    />
+  </div>
+</form>
