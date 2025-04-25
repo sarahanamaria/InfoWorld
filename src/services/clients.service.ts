@@ -16,6 +16,7 @@ export class ClientsService {
     }
 
     // use http to get data from public folder to show in request tab
+    // if not i get a 404 in the console
     return this.http.get<IClient[]>('/db/clients.json').pipe(
       tap((clients: IClient[]) => {
         localStorage.setItem('clients', JSON.stringify(clients));

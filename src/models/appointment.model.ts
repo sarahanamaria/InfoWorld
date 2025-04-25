@@ -1,15 +1,17 @@
 import { ICar } from "@models/car.model";
 import { IClient } from "@models/client.model";
+import { AppointmentMethodEnum } from "enums/appointment-method.enum";
+import { AppointmentStatusEnum } from "enums/appointment-status.enum";
 
 export default interface IAppointment {
   id: string;
   client: IClient;
   car: ICar;
-  method: 'email' | 'telefon' | 'in_persoana';
+  method: AppointmentMethodEnum;
   description: string;
   date: string;
   startTime: string;
   endTime: string;
-  status: 'programata' | 'finalizata' | 'anulata';
+  status: AppointmentStatusEnum;
   contactValue?: string; // optional, for pgone or email methods
 }

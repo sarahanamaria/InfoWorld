@@ -16,6 +16,8 @@ import { ICar } from '@models/car.model';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
+import { AppointmentMethodEnum } from 'enums/appointment-method.enum';
+import { AppointmentStatusEnum } from 'enums/appointment-status.enum';
 
 @Component({
   selector: 'app-appointment-form',
@@ -39,9 +41,9 @@ export class AppointmentFormComponent implements OnInit {
   selectedClientCars: ICar[] = [];
 
   contactMethods = [
-    { label: 'Email', value: 'email' },
-    { label: 'Telefon', value: 'telefon' },
-    { label: 'In persoana', value: 'in_persoana' },
+    { label: 'Email', value: AppointmentMethodEnum.Email },
+    { label: 'Telefon', value: AppointmentMethodEnum.Phone },
+    { label: 'In persoana', value: AppointmentMethodEnum.InPerson },
   ];
 
   startTimeSlots: string[] = [];
@@ -77,7 +79,7 @@ export class AppointmentFormComponent implements OnInit {
       const appointment: IAppointment = {
         ...date,
         contactValue:
-          date.method === 'telefon' || date.method === 'email'
+          date.method === AppointmentMethodEnum.Phone || date.method === AppointmentMethodEnum.Email
             ? date.contactValue
             : undefined,
         client: date.client,
@@ -87,7 +89,7 @@ export class AppointmentFormComponent implements OnInit {
         date: formatDate(date.date, 'dd-MM-yyyy', 'en'),
         startTime: date.startTime,
         endTime: date.endTime,
-        status: 'programata',
+        status: AppointmentStatusEnum.Scheduled,
         id,
       };
 

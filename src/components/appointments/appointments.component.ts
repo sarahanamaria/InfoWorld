@@ -15,6 +15,7 @@ import { take } from 'rxjs';
 import { Toast } from 'primeng/toast';
 import { AppointmentFormComponent } from '@components/appointment-form/appointment-form/appointment-form.component';
 import { v4 as uuidv4 } from 'uuid';
+import { AppointmentStatusEnum } from 'enums/appointment-status.enum';
 
 @Component({
   selector: 'app-appointments',
@@ -53,6 +54,8 @@ export class AppointmentsComponent implements OnInit {
       .open(AppointmentFormComponent, {
         header: 'Adauga programare',
         width: '500px',
+        closable: true,
+        modal: true,
         data: {
           clients: this.clients,
           isAdmin: this.isAdmin,
@@ -69,12 +72,12 @@ export class AppointmentsComponent implements OnInit {
   }
 
   finalize(appointment: IAppointment): void {
-    appointment.status = 'finalizata';
+    appointment.status = AppointmentStatusEnum.Finalized;
     this.saveAppointments('Programarea a fost marcata ca finalizata');
   }
 
   cancel(appointment: IAppointment): void {
-    appointment.status = 'anulata';
+    appointment.status = AppointmentStatusEnum.Canceled;
     this.saveAppointments('Programarea a fost anulata');
   }
 
