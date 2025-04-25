@@ -65,7 +65,7 @@ export class AppointmentHistoryFormComponent implements OnInit {
       const appointment = appointments.find(
         (a) => a.id === this.dialogConfig.data.appointment.id
       );
-      if (appointment) {
+      if (appointment?.serviceHistory) {
         this.historyForm.patchValue({
           reception: appointment.serviceHistory.reception,
         });
