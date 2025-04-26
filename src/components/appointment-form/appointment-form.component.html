@@ -82,6 +82,8 @@
       type="submit"
       icon="pi pi-check"
       [disabled]="!appointmentForm.valid"
+      [pTooltip]="appointmentForm.valid ? '' : 'Completeaza toate campurile'"
+      tooltipPosition="top"
     />
   </div>
 </form>

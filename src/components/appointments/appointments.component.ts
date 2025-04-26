@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import IAppointment from '@models/appointment.model';
 import { IClient } from '@models/client.model';
 import { AppointmentsService } from '@services/appointments.service';
@@ -11,18 +11,27 @@ import {
   DynamicDialogModule,
   DynamicDialogRef,
 } from 'primeng/dynamicdialog';
-import { take } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { Toast } from 'primeng/toast';
-import { AppointmentFormComponent } from '@components/appointment-form/appointment-form/appointment-form.component';
+import { AppointmentFormComponent } from '@components/appointment-form/appointment-form.component';
 import { v4 as uuidv4 } from 'uuid';
 import { AppointmentStatusEnum } from 'enums/appointment-status.enum';
+import { AppointmentHistoryFormComponent } from '@components/appointment-history-form/appointment-history-form.component';
+import { TooltipModule } from 'primeng/tooltip';
+import { UserStatusService } from '@services/user-status.service';
 
 @Component({
   selector: 'app-appointments',
   standalone: true,
   templateUrl: './appointments.component.html',
   styleUrls: ['./appointments.component.scss'],
-  imports: [TableModule, ButtonModule, DynamicDialogModule, Toast],
+  imports: [
+    TableModule,
+    ButtonModule,
+    DynamicDialogModule,
+    Toast,
+    TooltipModule,
+  ],
   providers: [
     AppointmentsService,
     ClientsService,
@@ -30,21 +39,26 @@ import { AppointmentStatusEnum } from 'enums/appointment-status.enum';
     DialogService,
   ],
 })
-export class AppointmentsComponent implements OnInit {
+export class AppointmentsComponent implements OnInit, OnDestroy {
   appointments: IAppointment[] = [];
   clients: IClient[] = [];
   dialogRef: DynamicDialogRef | null = null;
+  expandedAppointmentRows: { [key: string]: boolean } = {};
+  isAdmin = true;
 
-  readonly isAdmin = true;
+  readonly appointmentStatusEnum = AppointmentStatusEnum;
+  private unsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     private appointmentsService: AppointmentsService,
     private clientsService: ClientsService,
     private messageService: MessageService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private userStatusService: UserStatusService
   ) {}
 
   ngOnInit(): void {
+    this.getUserStatus();
     this.loadAppointments();
     this.loadClients();
   }
@@ -58,7 +72,6 @@ export class AppointmentsComponent implements OnInit {
         modal: true,
         data: {
           clients: this.clients,
-          isAdmin: this.isAdmin,
         },
       })
       .onClose.pipe(take(1))
@@ -71,16 +84,10 @@ export class AppointmentsComponent implements OnInit {
       });
   }
 
-  finalize(appointment: IAppointment): void {
-    appointment.status = AppointmentStatusEnum.Finalized;
-    this.saveAppointments('Programarea a fost marcata ca finalizata');
-  }
-
   cancel(appointment: IAppointment): void {
     appointment.status = AppointmentStatusEnum.Canceled;
     this.saveAppointments('Programarea a fost anulata');
   }
-
 
   editAppointment(appointment: IAppointment): void {
     this.dialogService
@@ -92,7 +99,6 @@ export class AppointmentsComponent implements OnInit {
         data: {
           clients: this.clients,
           existingAppointment: appointment,
-          isAdmin: this.isAdmin,
         },
       })
       .onClose.pipe(take(1))
@@ -107,6 +113,52 @@ export class AppointmentsComponent implements OnInit {
           }
         }
       });
+  }
+
+  finalizeWithHistory(appointment: IAppointment): void {
+    this.dialogRef = this.dialogService.open(AppointmentHistoryFormComponent, {
+      header: 'Istoric service',
+      width: '500px',
+      modal: true,
+      closable: true,
+      data: {
+        appointment,
+      },
+    });
+
+    this.dialogRef.onClose.pipe(take(1)).subscribe((historyData) => {
+      if (historyData) {
+        const index: number = this.appointments.findIndex(
+          (app: IAppointment) => app.id === appointment.id
+        );
+        if (index !== -1) {
+          this.appointments[index] = {
+            ...appointment,
+            status: AppointmentStatusEnum.Finalized,
+            serviceHistory: {
+              reception: historyData.reception,
+              processing: historyData.processing,
+              duration: historyData.duration,
+            },
+          };
+          this.saveAppointments('Programarea a fost finalizata cu istoric.');
+        }
+      }
+    });
+  }
+
+  onAppointmentToggle(event: any, expand: boolean): void {
+    const appointment = event.data as IAppointment;
+    if (expand) {
+      this.expandedAppointmentRows[appointment.id] = true;
+    } else {
+      delete this.expandedAppointmentRows[appointment.id];
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   private saveAppointments(message: string): void {
@@ -134,5 +186,12 @@ export class AppointmentsComponent implements OnInit {
       .subscribe((data) => {
         this.clients = data;
       });
+  }
+
+  private getUserStatus(): void {
+    this.userStatusService
+      .getIsAdmin()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((isAdmin) => (this.isAdmin = isAdmin));
   }
 }

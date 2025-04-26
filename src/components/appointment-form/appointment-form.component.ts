@@ -18,6 +18,9 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { AppointmentMethodEnum } from 'enums/appointment-method.enum';
 import { AppointmentStatusEnum } from 'enums/appointment-status.enum';
+import { TooltipModule } from 'primeng/tooltip';
+import { UserStatusService } from '@services/user-status.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-appointment-form',
@@ -33,6 +36,7 @@ import { AppointmentStatusEnum } from 'enums/appointment-status.enum';
     DatePickerModule,
     InputTextModule,
     CommonModule,
+    TooltipModule
   ],
 })
 export class AppointmentFormComponent implements OnInit {
@@ -55,12 +59,13 @@ export class AppointmentFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dialogRef: DynamicDialogRef,
-    private dialogConfig: DynamicDialogConfig
+    private dialogConfig: DynamicDialogConfig,
+    private userStatusService: UserStatusService
   ) {}
 
   ngOnInit(): void {
+    this.getUserStatus();
     this.initializeClients();
-    this.isAdmin = this.dialogConfig.data.isAdmin;
     this.initForm();
     this.generateTimeSlots();
     this.handleExistingAppointment();
@@ -90,6 +95,11 @@ export class AppointmentFormComponent implements OnInit {
         startTime: date.startTime,
         endTime: date.endTime,
         status: AppointmentStatusEnum.Scheduled,
+        serviceHistory: {
+          processing: '',
+          reception: this.appointmentForm.value.description,
+          duration: 0,
+        },
         id,
       };
 
@@ -156,5 +166,9 @@ export class AppointmentFormComponent implements OnInit {
         this.endTimeSlots.push(`${hour}:30`);
       }
     }
+  }
+
+  private getUserStatus(): void {
+    this.userStatusService.getIsAdmin().pipe(take(1)).subscribe((isAdmin: boolean) => this.isAdmin = isAdmin);
   }
 }

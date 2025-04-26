@@ -1,16 +1,22 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { RoutingPathsEnum } from '../enums/routing-paths.enum';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { UserStatusService } from '@services/user-status.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [MenubarModule, RouterOutlet],
+  imports: [MenubarModule, RouterOutlet, ButtonModule, TooltipModule, NgClass],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  isAdmin = false;
+
   menuItems: MenuItem[] = [
     {
       label: 'Clienti',
@@ -22,10 +28,21 @@ export class AppComponent {
       icon: 'pi pi-clock',
       routerLink: RoutingPathsEnum.Appointments,
     },
-    {
-      label: 'Istoric Service',
-      icon: 'pi pi-history',
-      routerLink: RoutingPathsEnum.History,
-    },
   ];
+
+  constructor(private userStatusService: UserStatusService, private cd: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.getAdminStatus()
+  }
+
+  setAdminStatus(): void {
+    this.userStatusService.setIsAdmin(!this.isAdmin);
+  }
+
+  private getAdminStatus(): void {
+    this.userStatusService.getIsAdmin().subscribe((isAdmin: boolean) => {
+      this.isAdmin = isAdmin;
+    });
+  }
 }

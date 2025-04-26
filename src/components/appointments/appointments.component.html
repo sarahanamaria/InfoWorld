@@ -6,6 +6,9 @@
   [paginator]="true"
   [totalRecords]="appointments.length"
   [rows]="5"
+  [expandedRowKeys]="expandedAppointmentRows"
+  (onRowExpand)="onAppointmentToggle($event, true)"
+  (onRowCollapse)="onAppointmentToggle($event, false)"
 >
   <ng-template #caption>
     <div class="flex justify-content-end mb-2">
@@ -19,6 +22,7 @@
 
   <ng-template #header>
     <tr>
+      <th style="width: 3rem"></th>
       <th>Client</th>
       <th>Masina</th>
       <th>Data</th>
@@ -29,8 +33,19 @@
     </tr>
   </ng-template>
 
-  <ng-template #body let-appointment>
+  <ng-template #body let-appointment let-expanded="expanded">
     <tr>
+      <td>
+        @if (appointment.status === appointmentStatusEnum.Finalized) {
+          <p-button
+            pRipple
+            [pRowToggler]="appointment"
+            [text]="true"
+            [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+            [disabled]="appointment.status !== appointmentStatusEnum.Finalized"
+          />
+        }
+      </td>
       <td>
         {{ appointment.client.firstName }} {{ appointment.client.lastName }}
       </td>
@@ -40,12 +55,25 @@
       <td>{{ appointment.method }}</td>
       <td>{{ appointment.status }}</td>
       <td>
-        @if (appointment.status === 'programata') {
-        <p-button icon="pi pi-times" class="mr-2" (click)="cancel(appointment)"/>
+        @if (appointment.status === appointmentStatusEnum.Scheduled) {
+        <p-button icon="pi pi-times" tooltipPosition="top" [pTooltip]="'Anuleaza programarea'" class="mr-2" (click)="cancel(appointment)"/>
         @if (isAdmin) {
-          <p-button icon="pi pi-pencil" class="mr-2" (click)="editAppointment(appointment)" />
-        <p-button icon="pi pi-check" (click)="finalize(appointment)"/>
+          <p-button icon="pi pi-pencil" tooltipPosition="top" [pTooltip]="'Editeaza programarea'" class="mr-2" (click)="editAppointment(appointment)" />
+          <p-button icon="pi pi-check-circle" (onClick)="finalizeWithHistory(appointment)" tooltipPosition="top" [pTooltip]="'Finalizeaza programarea cu istoric'"/>
         } }
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template #expandedrow let-appointment>
+    <tr>
+      <td colspan="8">
+        <div class="flex flex-column gap-2 p-2">
+          <h5>Istoric Service</h5>
+          <p><b>Primire masina:</b> {{ appointment.serviceHistory?.reception }}</p>
+          <p><b>Procesare masina:</b> {{ appointment.serviceHistory?.processing }}</p>
+          <p><b>Durata reparatie:</b> {{ appointment.serviceHistory?.duration }} minute</p>
+        </div>
       </td>
     </tr>
   </ng-template>
