@@ -6,10 +6,11 @@ import { RoutingPathsEnum } from '../enums/routing-paths.enum';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { UserStatusService } from '@services/user-status.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [MenubarModule, RouterOutlet, ButtonModule, TooltipModule],
+  imports: [MenubarModule, RouterOutlet, ButtonModule, TooltipModule, NgClass],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
